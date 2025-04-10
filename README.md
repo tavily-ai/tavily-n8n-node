@@ -1,11 +1,11 @@
 # @tavily/n8n-nodes-tavily
 
-@tavily/n8n-nodes-tavily is a community node for n8n that integrates the Tavily API, enabling powerful web search and content extraction within your no-code automation workflows.
+@tavily/n8n-nodes-tavily is a node for n8n that integrates the Tavily API, enabling powerful web search and content extraction within your no-code automation workflows.
 
 ## Features
 
 ### Tavily Search
-Tavily Search allows you to query the web with powerful filtering capabilities, including options to refine results by topic, time range, and specific domains to include or exclude. You can choose to retrieve a generated answer, raw content, or even related images, depending on your workflow needs. It also supports different search depths—basic advanced. 
+Tavily Search allows you to query the web with powerful filtering capabilities, including options to refine results by topic, time range, and specific domains to include or exclude. You can choose to retrieve a generated answer, raw content, or even related images, depending on your workflow needs. It also supports different search depths—basic or advanced. 
 
 ### Tavily Extract
  Tavily Extract allows you to effortlessly retrieve raw content from a list of websites, making it ideal for data collection, content analysis, and research. You can also combine Tavily Extract with our Search method: first, obtain a list of relevant documents, then perform further processing on selected links to gather additional information and use it as context for your research tasks.
@@ -29,21 +29,23 @@ Tavily Search allows you to query the web with powerful filtering capabilities, 
 
 1. Add the "Tavily" node to your n8n workflow
 2. Connect it to the preceding node in your workflow
-3. In the node's settings:
-   - Select your Tavily API credential
+3. Click on 'Search'
+4. In the node's settings:
+   - Select your Tavily API
    - Enter your search query
    - Configure any other desired search parameters (topic, search depth, etc.)
-4. Run the workflow to execute the search
+5. Run the workflow to execute the search
 
 ### Tavily Extract
 
 1. Add the "Tavily" node to your n8n workflow
 2. Connect it to the preceding node
-3. In the node's settings:
+3. Click on 'Extract'
+4. In the node's settings:
    - Select your Tavily API credential
    - Enter the URLs you want to extract content from
    - Configure any other extraction parameters (include images, extract depth)
-4. Run the workflow to extract the content
+5. Run the workflow to extract the content
 
 ## Parameters
 
