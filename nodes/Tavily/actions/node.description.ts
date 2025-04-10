@@ -16,7 +16,7 @@ export const description: INodeTypeDescription = {
 		name: 'Tavily',
 	},
 	inputs: [NodeConnectionType.Main],
-	outputs: [NodeConnectionType.Main],
+	outputs: `={{['main']}}` as const,
 	credentials: [
 		{
 			name: 'tavilyApi',
