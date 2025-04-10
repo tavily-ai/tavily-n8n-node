@@ -1,19 +1,14 @@
 # @tavily/n8n-nodes-tavily
 
-@tavily/n8n-nodes-tavily is a n8n community node package that integrates the Tavily API for powerful web search and web content extraction.
+@tavily/n8n-nodes-tavily is a community node for n8n that integrates the Tavily API, enabling powerful web search and content extraction within your no-code automation workflows.
 
 ## Features
 
 ### Tavily Search
-- Query the web with multiple filtering options (topic, time range, domain inclusion/exclusion, etc.)
-- Optionally retrieve a generated answer, raw content, or images
-- Support for different search depths (basic/advanced)
-- Configurable number of content chunks per source
+Tavily Search allows you to query the web with powerful filtering capabilities, including options to refine results by topic, time range, and specific domains to include or exclude. You can choose to retrieve a generated answer, raw content, or even related images, depending on your workflow needs. It also supports different search depths—basic advanced. 
 
 ### Tavily Extract
-- Extract text and optional images from one or more URLs
-- Choose between basic or advanced extraction depth
-- Support for multiple URLs in a single request
+ Tavily Extract allows you to effortlessly retrieve raw content from a list of websites, making it ideal for data collection, content analysis, and research. You can also combine Tavily Extract with our Search method: first, obtain a list of relevant documents, then perform further processing on selected links to gather additional information and use it as context for your research tasks.
 
 ## Getting a Tavily API Key
 
@@ -59,7 +54,7 @@
 | Query | The search query to execute |
 | Topic | The category of the search (General, News, or Finance) |
 | Search Depth | The depth of the search (Basic or Advanced) |
-| Chunks Per Source | Number of content chunks to retrieve from each source (1-3) |
+| Chunks Per Source (Advanced Search only) | Number of content chunks to retrieve from each source (1-3) |
 | Max Results | Maximum number of search results to return (1-20) |
 | Time Range | Time range filter for results (day, week, month, year) |
 | Days (News Only) | Number of days back from the current date to include (for News topic) |
@@ -90,3 +85,17 @@
 | 432 Plan Limit Exceeded | Exceeds plan limits | Upgrade your plan via [Tavily Dashboard](https://app.tavily.com/account/plan) |
 | 433 Pay-As-You-Go Limit Exceeded | Exceeds pay-as-you-go limit | Increase limit via [Tavily Dashboard](https://app.tavily.com/account/plan) |
 | 500 Internal Server Error | Server-side issue | Retry request after a few minutes |
+
+## Cost
+
+Head to the [API Credits Overview](https://docs.tavily.com/documentation/api-credits) in our documentation to learn more about how many API Credits each request costs.
+
+## License
+
+This project is licensed under the terms of the MIT license.
+
+## Contact
+
+If you are encountering issues while using Tavily, please email us at support@tavily.com. We'll be happy to help you.
+
+If you want to stay updated on the latest Tavily news and releases, head to our [Developer Community](https://community.tavily.com) to learn more!
