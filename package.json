@@ -1,12 +1,12 @@
 {
   "name": "@tavily/n8n-nodes-tavily",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "Tavily is a search engine tailored for AI agents, delivering real-time, accurate results, intelligent query suggestions, and in-depth research capabilities.",
   "keywords": [
     "n8n-community-node-package"
   ],
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://tavily.com",
   "author": {
     "name": "Tavily AI"
   },
@@ -37,7 +37,6 @@
     ]
   },
   "devDependencies": {
-    "@types/lodash": "^4.17.15",
     "@typescript-eslint/parser": "~5.45",
     "eslint-plugin-n8n-nodes-base": "^1.11.0",
     "gulp": "^4.0.2",
@@ -49,7 +48,9 @@
     "n8n-workflow": "*"
   },
   "dependencies": {
-    "lodash": "^4.17.21",
-    "sqlite3": "^5.1.7"
+  },
+  "resolutions": {
+    "lodash": "0.0.0-does-not-exist",
+    "lodash.merge": "0.0.0-does-not-exist"
   }
 }
