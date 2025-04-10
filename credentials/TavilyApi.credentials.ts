@@ -20,7 +20,7 @@ export class TavilyApi implements ICredentialType {
 			name: 'apiKey',
 			type: 'string',
 			typeOptions: { password: true },
-			description: "Tavily API key",
+			description: "Tavily API key. You can find your API key in your Tavily dashboard at https://app.tavily.com/home",
 			default: "",
 		},
 		{
