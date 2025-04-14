@@ -1,7 +1,7 @@
 {
   "name": "@tavily/n8n-nodes-tavily",
-  "version": "0.1.5",
-  "description": "Tavily is a search engine tailored for AI agents, delivering real-time, accurate results, intelligent query suggestions, and in-depth research capabilities.",
+  "version": "0.1.7",
+  "description": "A community node for n8n to integrate Tavily API for web search and content extraction.",
   "keywords": [
     "n8n-community-node-package"
   ],
