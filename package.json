@@ -47,7 +47,6 @@
   "peerDependencies": {
     "n8n-workflow": "*"
   },
-  "dependencies": {},
   "resolutions": {
     "lodash": "0.0.0-does-not-exist",
     "lodash.merge": "0.0.0-does-not-exist"
