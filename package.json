@@ -1,6 +1,6 @@
 {
   "name": "@tavily/n8n-nodes-tavily",
-  "version": "0.1.7",
+  "version": "0.1.10",
   "description": "A community node for n8n to integrate Tavily API for web search and content extraction.",
   "keywords": [
     "n8n-community-node-package"
@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "@typescript-eslint/parser": "~5.45",
+    "braces": "^3.0.3",
     "eslint-plugin-n8n-nodes-base": "^1.11.0",
     "gulp": "^4.0.2",
     "n8n-workflow": "*",
