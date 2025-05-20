@@ -1,6 +1,6 @@
 {
   "name": "@tavily/n8n-nodes-tavily",
-  "version": "0.1.11",
+  "version": "0.1.14",
   "description": "A community node for n8n to integrate Tavily API for web search and content extraction.",
   "keywords": [
     "n8n-community-node-package"
