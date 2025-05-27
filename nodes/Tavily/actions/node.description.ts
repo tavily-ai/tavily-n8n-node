@@ -15,6 +15,7 @@ export const description: INodeTypeDescription = {
 	defaults: {
 		name: 'Tavily',
 	},
+	usableAsTool: true,
 	inputs: [NodeConnectionType.Main],
 	outputs: `={{['main']}}` as const,
 	credentials: [
