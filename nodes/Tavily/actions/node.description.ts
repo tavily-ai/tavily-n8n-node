@@ -3,6 +3,7 @@ import { NodeConnectionType, type INodeTypeDescription } from 'n8n-workflow';
 
 import * as search from './search';
 import * as extract from './extract';
+import * as crawl from './crawl';
 
 export const description: INodeTypeDescription = {
 	displayName: 'Tavily',
@@ -39,10 +40,15 @@ export const description: INodeTypeDescription = {
 				{
 					name: 'Extract',
 					value: 'extract',
-				}
+				},
+				{
+					name: 'Crawl',
+					value: 'crawl',
+				},
 			],
 		},
 		...extract.description,
 		...search.description,
+		...crawl.description
 	],
 };
