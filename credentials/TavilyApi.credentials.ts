@@ -36,6 +36,7 @@ export class TavilyApi implements ICredentialType {
 		properties: {
 			headers: {
 				Authorization: '=Bearer {{$credentials.apiKey}}',
+				'X-Client-Source': 'n8n'
 			},
 		},
 	};
@@ -45,6 +46,10 @@ export class TavilyApi implements ICredentialType {
 				baseURL: 'https://api.tavily.com',
 				url: '/search',
 				method: 'POST',
+				headers: {
+					Authorization: '=Bearer {{$credentials.apiKey}}',
+					'X-Client-Source': 'n8n'
+				},
 				body: {
 					query: 'Hello n8n!',
 				},

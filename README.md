@@ -10,6 +10,9 @@ Tavily Search allows you to query the web with powerful filtering capabilities, 
 ### Tavily Extract
  Tavily Extract allows you to effortlessly retrieve raw content from a list of websites, making it ideal for data collection, content analysis, and research. You can also combine Tavily Extract with our Search method: first, obtain a list of relevant documents, then perform further processing on selected links to gather additional information and use it as context for your research tasks.
 
+### Tavily Crawl
+Tavily Crawl allows you to intelligently crawl a website from a starting URL to discover and extract content across multiple pages. Control depth, breadth, and apply filters to tailor your crawl for comprehensive analysis and content aggregation.
+
 ## Getting a Tavily API Key
 
 1. Go to the [Tavily website](https://tavily.com) and create an account
@@ -47,6 +50,17 @@ Tavily Search allows you to query the web with powerful filtering capabilities, 
    - Configure any other extraction parameters (include images, extract depth)
 5. Run the workflow to extract the content
 
+### Tavily Crawl
+
+1. Add the "Tavily" node to your n8n workflow
+2. Connect it to the preceding node
+3. Click on 'Crawl'
+4. In the node's settings:
+   - Select your Tavily API credential
+   - Enter the root URL to begin the crawl
+   - Configure crawl parameters (max depth, limit, etc.)
+5. Run the workflow to crawl the website and extract content
+
 ## Parameters
 
 ### Tavily Search Parameters
@@ -75,6 +89,25 @@ Tavily Search allows you to query the web with powerful filtering capabilities, 
 | Include Images | Include a list of images extracted from each URL |
 | Extract Depth | How deeply to parse each URL (Basic or Advanced) |
 
+### Tavily Crawl Parameters
+
+| Parameter | Description |
+|-----------|-------------|
+| URL | The root URL to begin the crawl |
+| Instructions | Natural language instructions for the crawler |
+| Max Depth | Maximum depth of the crawl (≥ 1) |
+| Max Breadth | Maximum number of links to follow per level (≥ 1) |
+| Limit | Maximum number of results to return (≥ 1) |
+| Categories | Filter URLs using predefined categories (About, Blog, Careers, etc.) |
+| Select Paths | Regex patterns to select only URLs with specific path patterns |
+| Select Domains | Regex patterns to select crawling to specific domains or subdomains |
+| Exclude Paths | Regex patterns to exclude URLs with specific path patterns |
+| Exclude Domains | Regex patterns to exclude specific domains or subdomains from crawling |
+| Allow External | Whether to allow following links that go to external domains |
+| Include Images | Whether to include images in the crawl results |
+| Extract Depth | Extraction depth (Basic or Advanced) |
+| Format | Format of the extracted web page content (Markdown or Text) |
+
 ## Troubleshooting
 
 ### Error Codes
@@ -84,8 +117,8 @@ Tavily Search allows you to query the web with powerful filtering capabilities, 
 | 400 Bad Request | Invalid request parameters or unsupported values | Check all parameters and their formats |
 | 401 Unauthorized | Missing or invalid API key | Verify API key or generate a new one |
 | 429 Too Many Requests | Rate limit exceeded | Reduce request frequency or implement backoff |
-| 432 Plan Limit Exceeded | Exceeds plan limits | Upgrade your plan via [Tavily Dashboard](https://app.tavily.com/account/plan) |
-| 433 Pay-As-You-Go Limit Exceeded | Exceeds pay-as-you-go limit | Increase limit via [Tavily Dashboard](https://app.tavily.com/account/plan) |
+| 432 Plan Limit Exceeded | Exceeds plan limits | Upgrade your plan via [Tavily Dashboard](https://app.tavily.com/billing) |
+| 433 Pay-As-You-Go Limit Exceeded | Exceeds pay-as-you-go limit | Increase limit via [Tavily Dashboard](https://app.tavily.com/billing) |
 | 500 Internal Server Error | Server-side issue | Retry request after a few minutes |
 
 ## Cost
