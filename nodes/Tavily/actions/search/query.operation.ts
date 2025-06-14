@@ -13,6 +13,11 @@ export const properties: INodeProperties[] = [
 		required: true,
 		default: '',
 		placeholder: 'e.g. who is leo messi?',
+		displayOptions: {
+			show: {
+				resource: ['search'],
+			},
+		},
 	},
 	{
 		displayName: 'Options',

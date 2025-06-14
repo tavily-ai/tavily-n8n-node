@@ -1,7 +1,7 @@
 import { INodeProperties } from 'n8n-workflow';
-import * as crawl from './crawl.operation';
+import * as url from './url.operation';
 
-export { crawl };
+export { url };
 
 export const description: INodeProperties[] = [
   {
@@ -16,13 +16,13 @@ export const description: INodeProperties[] = [
     },
     options: [
       {
-        name: 'Crawl',
-        value: 'crawl',
-        description: 'Crawl a site',
+        name: 'URL',
+        value: 'url',
+        description: 'The root URL to begin the crawl',
         action: 'Crawl',
       },
     ],
-    default: 'crawl',
+    default: 'url',
   },
-  ...crawl.description,
+  ...url.description,
 ];
