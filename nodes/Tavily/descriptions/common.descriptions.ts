@@ -24,6 +24,17 @@ export const extractOptions: INodeProperties[] = [
 		],
 		description: 'The depth of the extraction process. advanced extraction retrieves more data, including tables and embedded content, with higher success but may increase latency.',
 	},
+	{
+		displayName: 'Format',
+		name: 'format',
+		type: 'options',
+		default: 'markdown',
+		options: [
+			{ name: 'Markdown', value: 'markdown' },
+			{ name: 'Text', value: 'text' }
+		],
+		description: 'The format of the extracted web page content. markdown returns content in markdown format. text returns plain text and may increase latency.'
+	},
 ];
 
 export const queryOptions: INodeProperties[] = [
@@ -211,5 +222,125 @@ export const queryFields = [
 	{
 		name: 'Unread Item Count',
 		value: 'unreadItemCount',
+	},
+];
+
+export const crawlOptions: INodeProperties[] = [
+	{
+		displayName: 'Instructions',
+		name: 'instructions',
+		type: 'string',
+		default: '',
+		description: 'Natural language instructions for the crawler'
+	},
+	{
+		displayName: 'Max Depth',
+		name: 'max_depth',
+		type: 'number',
+		default: 1,
+		description: 'Max depth of the crawl',
+		typeOptions: { minValue: 1 }
+	},
+	{
+		displayName: 'Max Breadth',
+		name: 'max_breadth',
+		type: 'number',
+		default: 20,
+		description: 'Max number of links to follow per level',
+		typeOptions: { minValue: 1 }
+	},
+	{
+		displayName: 'Limit',
+		name: 'limit',
+		type: 'number',
+		default: 50,
+		description: 'Max number of results to return',
+		typeOptions: { minValue: 1 }
+	},
+	{
+		displayName: 'Categories',
+		name: 'categories',
+		type: 'multiOptions',
+		default: [],
+		options: [
+			{ name: 'About', value: 'About' },
+			{ name: 'Blog', value: 'Blog' },
+			{ name: 'Careers', value: 'Careers' },
+			{ name: 'Community', value: 'Community' },
+			{ name: 'Contact', value: 'Contact' },
+			{ name: 'Developers', value: 'Developers' },
+			{ name: 'Documentation', value: 'Documentation' },
+			{ name: 'Media', value: 'Media' },
+			{ name: 'Pricing', value: 'Pricing' },
+		],
+		description: 'Filter URLs using predefined categories'
+	},
+	{
+		displayName: 'Select Paths',
+		name: 'select_paths',
+		type: 'string',
+		typeOptions: { multipleValues: true },
+		default: [],
+		description: 'Regex patterns to select only URLs with specific path patterns'
+	},
+	{
+		displayName: 'Select Domains',
+		name: 'select_domains',
+		type: 'string',
+		typeOptions: { multipleValues: true },
+		default: [],
+		description: 'Regex patterns to select crawling to specific domains or subdomains'
+	},
+	{
+		displayName: 'Exclude Paths',
+		name: 'exclude_paths',
+		type: 'string',
+		typeOptions: { multipleValues: true },
+		default: [],
+		description: 'Regex patterns to exclude URLs with specific path patterns'
+	},
+	{
+		displayName: 'Exclude Domains',
+		name: 'exclude_domains',
+		type: 'string',
+		typeOptions: { multipleValues: true },
+		default: [],
+		description: 'Regex patterns to exclude specific domains or subdomains from crawling'
+	},
+	{
+		displayName: 'Allow External',
+		name: 'allow_external',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to allow following links that go to external domains'
+	},
+	{
+		displayName: 'Include Images',
+		name: 'include_images',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to include images in the crawl results'
+	},
+	{
+		displayName: 'Extract Depth',
+		name: 'extract_depth',
+		type: 'options',
+		default: 'basic',
+		options: [
+			{ name: 'Basic', value: 'basic' },
+			{ name: 'Advanced', value: 'advanced' }
+		],
+		description: 'Extraction depth'
+	},
+	{
+		displayName: 'Format',
+		name: 'format',
+		type: 'options',
+		default: 'markdown',
+		options: [
+			{ name: 'Markdown', value: 'markdown' },
+			{ name: 'Text', value: 'text' }
+		],
+		description: 'Format of the extracted web page content'
 	},
 ];

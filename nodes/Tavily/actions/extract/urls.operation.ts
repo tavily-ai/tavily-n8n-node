@@ -16,7 +16,12 @@ export const properties: INodeProperties[] = [
 		},
 		required: true,
 		default: [],
-		placeholder: 'e.g. https://tavily.com'
+		placeholder: 'e.g. https://tavily.com',
+		displayOptions: {
+			show: {
+				resource: ['extract'],
+			},
+		},
 	},
 	{
 		displayName: 'Options',
