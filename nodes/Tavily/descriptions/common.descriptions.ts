@@ -35,6 +35,13 @@ export const extractOptions: INodeProperties[] = [
 		],
 		description: 'The format of the extracted web page content. markdown returns content in markdown format. text returns plain text and may increase latency.'
 	},
+	{
+		displayName: 'Include Favicon',
+		name: 'include_favicon',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to include the favicon URL for each result'
+	},
 ];
 
 export const queryOptions: INodeProperties[] = [
@@ -196,6 +203,13 @@ export const queryOptions: INodeProperties[] = [
 		description: 'A list of domains to exclude from the search results',
 		placeholder: 'example.com',
 	},
+	{
+		displayName: 'Include Favicon',
+		name: 'include_favicon',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to include the favicon URL for each result'
+	},
 ];
 
 export const queryFields = [
@@ -342,5 +356,12 @@ export const crawlOptions: INodeProperties[] = [
 			{ name: 'Text', value: 'text' }
 		],
 		description: 'Format of the extracted web page content'
+	},
+	{
+		displayName: 'Include Favicon',
+		name: 'include_favicon',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to include the favicon URL for each result'
 	},
 ];
