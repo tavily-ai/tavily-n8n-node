@@ -80,6 +80,7 @@ Tavily Crawl allows you to intelligently crawl a website from a starting URL to 
 | Include Image Descriptions | When including images, also add a descriptive text for each image |
 | Include Domains | A list of domains to specifically include in the search results |
 | Exclude Domains | A list of domains to specifically exclude from the search results |
+| Include Favicon | Include the favicon URL for each result |
 
 ### Tavily Extract Parameters
 
@@ -88,6 +89,8 @@ Tavily Crawl allows you to intelligently crawl a website from a starting URL to 
 | URLs | One or more URLs to extract content from |
 | Include Images | Include a list of images extracted from each URL |
 | Extract Depth | How deeply to parse each URL (Basic or Advanced) |
+| Format | Format of the extracted web page content (Markdown or Text) |
+| Include Favicon | Include the favicon URL for each result |
 
 ### Tavily Crawl Parameters
 
@@ -107,6 +110,7 @@ Tavily Crawl allows you to intelligently crawl a website from a starting URL to 
 | Include Images | Whether to include images in the crawl results |
 | Extract Depth | Extraction depth (Basic or Advanced) |
 | Format | Format of the extracted web page content (Markdown or Text) |
+| Include Favicon | Include the favicon URL for each result |
 
 ## Troubleshooting
 
