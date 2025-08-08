@@ -210,6 +210,29 @@ export const queryOptions: INodeProperties[] = [
 		default: false,
 		description: 'Whether to include the favicon URL for each result'
 	},
+	{
+		displayName: 'Auto Parameters',
+		name: 'auto_parameters',
+		type: 'boolean',
+		default: false,
+		description: 'Whether auto_parameters is enabled, Tavily automatically configures search parameters based on your query\'s content and intent',
+	},
+	{
+		displayName: 'Start Date',
+		name: 'start_date',
+		type: 'string',
+		default: '',
+		description: 'Will return all results after the specified start date (publish date). Required to be written in the format YYYY-MM-DD.',
+		placeholder: '2025-02-09'
+	},
+	{
+		displayName: 'End Date',
+		name: 'end_date',
+		type: 'string',
+		default: '',
+		description: 'Will return all results before the specified end date (publish date). Required to be written in the format YYYY-MM-DD.',
+		placeholder: '2000-01-28'
+	},
 ];
 
 export const queryFields = [
