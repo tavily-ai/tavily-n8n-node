@@ -233,6 +233,13 @@ export const queryOptions: INodeProperties[] = [
 		description: 'Will return all results before the specified end date (publish date). Required to be written in the format YYYY-MM-DD.',
 		placeholder: '2000-01-28'
 	},
+	{
+		displayName: 'Country',
+		name: 'country',
+		type: 'string',
+		default: '',
+		description: 'Boost search results from a specific country. This will prioritize content from the selected country in the search results. Available only if topic is general. Full available options: https://docs.tavily.com/documentation/api-reference/endpoint/search#body-country'
+	},
 ];
 
 export const queryFields = [
