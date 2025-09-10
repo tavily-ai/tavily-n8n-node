@@ -81,6 +81,10 @@ Tavily Crawl allows you to intelligently crawl a website from a starting URL to 
 | Include Domains | A list of domains to specifically include in the search results |
 | Exclude Domains | A list of domains to specifically exclude from the search results |
 | Include Favicon | Include the favicon URL for each result |
+| Country | Boost search results from a specific country. |
+| Auto Parameters | When enabled, Tavily automatically configures search parameters based on your query's content and intent |
+| Start Date | Will return all results after the specified start date (publish date). Required to be written in the format YYYY-MM-DD |
+| End Date | Will return all results before the specified end date (publish date). Required to be written in the format YYYY-MM-DD |
 
 ### Tavily Extract Parameters
 
@@ -101,7 +105,6 @@ Tavily Crawl allows you to intelligently crawl a website from a starting URL to 
 | Max Depth | Maximum depth of the crawl (≥ 1) |
 | Max Breadth | Maximum number of links to follow per level (≥ 1) |
 | Limit | Maximum number of results to return (≥ 1) |
-| Categories | Filter URLs using predefined categories (About, Blog, Careers, etc.) |
 | Select Paths | Regex patterns to select only URLs with specific path patterns |
 | Select Domains | Regex patterns to select crawling to specific domains or subdomains |
 | Exclude Paths | Regex patterns to exclude URLs with specific path patterns |

@@ -302,24 +302,6 @@ export const crawlOptions: INodeProperties[] = [
 		typeOptions: { minValue: 1 }
 	},
 	{
-		displayName: 'Categories',
-		name: 'categories',
-		type: 'multiOptions',
-		default: [],
-		options: [
-			{ name: 'About', value: 'About' },
-			{ name: 'Blog', value: 'Blog' },
-			{ name: 'Careers', value: 'Careers' },
-			{ name: 'Community', value: 'Community' },
-			{ name: 'Contact', value: 'Contact' },
-			{ name: 'Developers', value: 'Developers' },
-			{ name: 'Documentation', value: 'Documentation' },
-			{ name: 'Media', value: 'Media' },
-			{ name: 'Pricing', value: 'Pricing' },
-		],
-		description: 'Filter URLs using predefined categories'
-	},
-	{
 		displayName: 'Select Paths',
 		name: 'select_paths',
 		type: 'string',
