@@ -81,6 +81,7 @@ Tavily Crawl allows you to intelligently crawl a website from a starting URL to 
 | Include Domains | A list of domains to specifically include in the search results |
 | Exclude Domains | A list of domains to specifically exclude from the search results |
 | Include Favicon | Include the favicon URL for each result |
+| Include Usage | Return Tavily credit usage data in the response when enabled. Usage appears only when requested and may be 0 if minimum thresholds are not met. See [Credits & Pricing](https://github.com/tavily-ai/new-docs/blob/main/docs/credits-pricing.md) for details. |
 | Country | Boost search results from a specific country. |
 | Auto Parameters | When enabled, Tavily automatically configures search parameters based on your query's content and intent |
 | Start Date | Will return all results after the specified start date (publish date). Required to be written in the format YYYY-MM-DD |
@@ -95,6 +96,7 @@ Tavily Crawl allows you to intelligently crawl a website from a starting URL to 
 | Extract Depth | How deeply to parse each URL (Basic or Advanced) |
 | Format | Format of the extracted web page content (Markdown or Text) |
 | Include Favicon | Include the favicon URL for each result |
+| Include Usage | Return Tavily credit usage data in the response when enabled. Usage appears only when requested and may be 0 if minimum thresholds are not met. See [Credits & Pricing](https://github.com/tavily-ai/new-docs/blob/main/docs/credits-pricing.md) for details. |
 
 ### Tavily Crawl Parameters
 
@@ -114,6 +116,9 @@ Tavily Crawl allows you to intelligently crawl a website from a starting URL to 
 | Extract Depth | Extraction depth (Basic or Advanced) |
 | Format | Format of the extracted web page content (Markdown or Text) |
 | Include Favicon | Include the favicon URL for each result |
+| Include Usage | Return Tavily credit usage data in the response when enabled. Usage appears only when requested and may be 0 if minimum thresholds are not met. See [Credits & Pricing](https://github.com/tavily-ai/new-docs/blob/main/docs/credits-pricing.md) for details. |
+
+When `Include Usage` is set to true for any endpoint, Tavily returns a top-level `usage` field in the response that reflects the credits billed for the request. Credit usage may return `0` when minimum thresholds have not been met. The value defaults to `false`, so existing workflows remain unchanged unless you opt in to receiving credit information.
 
 ## Troubleshooting
 
