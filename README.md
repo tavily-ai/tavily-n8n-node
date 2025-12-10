@@ -77,6 +77,7 @@ Tavily Crawl allows you to intelligently crawl a website from a starting URL to 
 | Include Answer | Include an LLM-generated answer in the response (Basic or Advanced) |
 | Include Raw Content | Include cleaned and parsed HTML content of each search result |
 | Include Images | Perform an image search and include the results in the response |
+| Include Usage | Whether to include credit usage information in the response (may show as 0 until thresholds are met) |
 | Include Image Descriptions | When including images, also add a descriptive text for each image |
 | Include Domains | A list of domains to specifically include in the search results |
 | Exclude Domains | A list of domains to specifically exclude from the search results |
@@ -92,6 +93,7 @@ Tavily Crawl allows you to intelligently crawl a website from a starting URL to 
 |-----------|-------------|
 | URLs | One or more URLs to extract content from |
 | Include Images | Include a list of images extracted from each URL |
+| Include Usage | Whether to include credit usage information in the response (may show as 0 until thresholds are met) |
 | Extract Depth | How deeply to parse each URL (Basic or Advanced) |
 | Format | Format of the extracted web page content (Markdown or Text) |
 | Include Favicon | Include the favicon URL for each result |
@@ -111,9 +113,12 @@ Tavily Crawl allows you to intelligently crawl a website from a starting URL to 
 | Exclude Domains | Regex patterns to exclude specific domains or subdomains from crawling |
 | Allow External | Whether to allow following links that go to external domains |
 | Include Images | Whether to include images in the crawl results |
+| Include Usage | Whether to include credit usage information in the response (may show as 0 until thresholds are met) |
 | Extract Depth | Extraction depth (Basic or Advanced) |
 | Format | Format of the extracted web page content (Markdown or Text) |
 | Include Favicon | Include the favicon URL for each result |
+
+> Note: Credit usage may be reported as 0 until certain usage thresholds are reached. This can vary by endpoint.
 
 ## Troubleshooting
 

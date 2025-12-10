@@ -8,6 +8,13 @@ export const extractOptions: INodeProperties[] = [
 		description: 'Whether to include a list of images extracted from the URLs. Default is false.',
 	},
 	{
+		displayName: 'Include Usage',
+		name: 'include_usage',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to include credit usage information in the response. Credit usage may appear as 0 until thresholds are met.',
+	},
+	{
 		displayName: 'Extract Depth',
 		name: 'extract_depth',
 		type: 'options',
@@ -173,6 +180,13 @@ export const queryOptions: INodeProperties[] = [
 		type: 'boolean',
 		default: false,
 		description: 'Whether to perform an image search and include the results in the response',
+	},
+	{
+		displayName: 'Include Usage',
+		name: 'include_usage',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to include credit usage information in the response. Credit usage may appear as 0 until thresholds are met.',
 	},
 	{
 		displayName: 'Include Image Descriptions',
@@ -346,6 +360,13 @@ export const crawlOptions: INodeProperties[] = [
 		type: 'boolean',
 		default: false,
 		description: 'Whether to include images in the crawl results'
+	},
+	{
+		displayName: 'Include Usage',
+		name: 'include_usage',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to include credit usage information in the response. Credit usage may appear as 0 until thresholds are met.',
 	},
 	{
 		displayName: 'Extract Depth',
