@@ -47,7 +47,7 @@ export const extractOptions: INodeProperties[] = [
 		name: 'include_usage',
 		type: 'boolean',
 		default: false,
-		description: 'Whether to include Tavily credit usage data in the response. The usage field only appears when enabled and may return 0 if minimum thresholds are not met. See Credits & Pricing for details: https://github.com/tavily-ai/new-docs/blob/main/docs/credits-pricing.md',
+		description: 'Whether to include credit usage information in the response.',
 	},
 ];
 
@@ -252,7 +252,7 @@ export const queryOptions: INodeProperties[] = [
 		name: 'include_usage',
 		type: 'boolean',
 		default: false,
-		description: 'Whether to include Tavily credit usage data in the response. The usage field only appears when enabled and may return 0 if minimum thresholds are not met. See Credits & Pricing for details: https://github.com/tavily-ai/new-docs/blob/main/docs/credits-pricing.md',
+		description: 'Whether to include credit usage information in the response.',
 	},
 ];
 
@@ -395,6 +395,6 @@ export const crawlOptions: INodeProperties[] = [
 		name: 'include_usage',
 		type: 'boolean',
 		default: false,
-		description: 'Whether to include Tavily credit usage data in the response. The usage field only appears when enabled and may return 0 if minimum thresholds are not met. See Credits & Pricing for details: https://github.com/tavily-ai/new-docs/blob/main/docs/credits-pricing.md',
+		description: 'Whether to include credit usage information in the response.',
 	},
 ];
