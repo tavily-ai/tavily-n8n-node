@@ -47,7 +47,7 @@ export const extractOptions: INodeProperties[] = [
 		name: 'query',
 		type: 'string',
 		default: '',
-		description: 'When supplied, triggers intent-based extraction, returning content most relevant to the query. Format is automatically set to condensed.',
+		description: 'When supplied, triggers intent-based extraction, returning content most relevant to the query.',
 	},
 	{
 		displayName: 'Chunks Per Source',

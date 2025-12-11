@@ -56,11 +56,6 @@ export async function execute(this: IExecuteFunctions, index: number) {
 		}
 	}
 
-	// When query is provided, set format to condensed for intent-based extraction
-	if (processedOptions.query) {
-		processedOptions.format = 'condensed';
-	}
-
 	const body: IDataObject = {
 		'urls': urls,
 		...processedOptions,
