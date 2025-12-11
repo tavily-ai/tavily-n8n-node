@@ -42,6 +42,23 @@ export const extractOptions: INodeProperties[] = [
 		default: false,
 		description: 'Whether to include the favicon URL for each result'
 	},
+	{
+		displayName: 'Query',
+		name: 'query',
+		type: 'string',
+		default: '',
+		description: 'When supplied, triggers intent-based extraction, returning content most relevant to the query. Format is automatically set to condensed.',
+	},
+	{
+		displayName: 'Chunks Per Source',
+		name: 'chunks_per_source',
+		type: 'number',
+		default: 3,
+		description: 'The number of top chunks to return per source for a given query. Only used when query is provided.',
+		typeOptions: {
+			minValue: 1,
+		},
+	},
 ];
 
 export const queryOptions: INodeProperties[] = [
