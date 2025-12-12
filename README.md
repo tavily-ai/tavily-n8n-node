@@ -8,7 +8,7 @@
 Tavily Search allows you to query the web with powerful filtering capabilities, including options to refine results by topic, time range, and specific domains to include or exclude. You can choose to retrieve a generated answer, raw content, or even related images, depending on your workflow needs. It also supports different search depths—basic or advanced. 
 
 ### Tavily Extract
- Tavily Extract allows you to effortlessly retrieve raw content from a list of websites, making it ideal for data collection, content analysis, and research. You can also combine Tavily Extract with our Search method: first, obtain a list of relevant documents, then perform further processing on selected links to gather additional information and use it as context for your research tasks.
+ Tavily Extract allows you to effortlessly retrieve raw content from a list of websites, making it ideal for data collection, content analysis, and research. You can also combine Tavily Extract with our Search method: first, obtain a list of relevant documents, then perform further processing on selected links to gather additional information and use it as context for your research tasks. With intent-based extraction, you can provide a query to retrieve only the most relevant content chunks from each source.
 
 ### Tavily Crawl
 Tavily Crawl allows you to intelligently crawl a website from a starting URL to discover and extract content across multiple pages. Control depth, breadth, and apply filters to tailor your crawl for comprehensive analysis and content aggregation.
@@ -95,6 +95,8 @@ Tavily Crawl allows you to intelligently crawl a website from a starting URL to 
 | Extract Depth | How deeply to parse each URL (Basic or Advanced) |
 | Format | Format of the extracted web page content (Markdown or Text) |
 | Include Favicon | Include the favicon URL for each result |
+| Query | When supplied, triggers intent-based extraction, returning content most relevant to the query |
+| Chunks Per Source | The number of top chunks to return per source for a given query (default: 3) |
 
 ### Tavily Crawl Parameters
 
