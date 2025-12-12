@@ -42,6 +42,13 @@ export const extractOptions: INodeProperties[] = [
 		default: false,
 		description: 'Whether to include the favicon URL for each result'
 	},
+	{
+		displayName: 'Include Usage',
+		name: 'include_usage',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to include credit usage information in the response.',
+	},
 ];
 
 export const queryOptions: INodeProperties[] = [
@@ -240,6 +247,13 @@ export const queryOptions: INodeProperties[] = [
 		default: '',
 		description: 'Boost search results from a specific country. This will prioritize content from the selected country in the search results. Available only if topic is general. Full available options: https://docs.tavily.com/documentation/api-reference/endpoint/search#body-country'
 	},
+	{
+		displayName: 'Include Usage',
+		name: 'include_usage',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to include credit usage information in the response.',
+	},
 ];
 
 export const queryFields = [
@@ -375,5 +389,12 @@ export const crawlOptions: INodeProperties[] = [
 		type: 'boolean',
 		default: false,
 		description: 'Whether to include the favicon URL for each result'
+	},
+	{
+		displayName: 'Include Usage',
+		name: 'include_usage',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to include credit usage information in the response.',
 	},
 ];
