@@ -49,6 +49,24 @@ export const extractOptions: INodeProperties[] = [
 		default: false,
 		description: 'Whether to include credit usage information in the response.',
 	},
+	{
+		displayName: 'Query',
+		name: 'query',
+		type: 'string',
+		default: '',
+		description: 'User intent query for reranking extracted chunks. When provided, content will be chunked and reranked based on this query.',
+	},
+	{
+		displayName: 'Chunks Per Source',
+		name: 'chunks_per_source',
+		type: 'number',
+		default: 3,
+		description: 'Number of top-ranked content chunks to return per source when using query-based extraction.',
+		typeOptions: {
+			minValue: 1,
+			maxValue: 5,
+		},
+	},
 ];
 
 export const queryOptions: INodeProperties[] = [
@@ -396,5 +414,16 @@ export const crawlOptions: INodeProperties[] = [
 		type: 'boolean',
 		default: false,
 		description: 'Whether to include credit usage information in the response.',
+	},
+	{
+		displayName: 'Chunks Per Source',
+		name: 'chunks_per_source',
+		type: 'number',
+		default: 3,
+		description: 'Number of top-ranked content chunks to return per source when using query-based extraction.',
+		typeOptions: {
+			minValue: 1,
+			maxValue: 5,
+		},
 	},
 ];
