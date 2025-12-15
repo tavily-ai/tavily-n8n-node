@@ -4,6 +4,7 @@ import { NodeApiError, NodeOperationError } from 'n8n-workflow';
 import * as search from './search';
 import * as extract from './extract';
 import * as crawl from './crawl';
+import * as map from './map';
 import type {Tavily} from "./node.type";
 
 
@@ -31,6 +32,9 @@ export async function router(this: IExecuteFunctions) {
 					break;
 				case 'crawl':
 					responseData = await (crawl as any)[tavily.operation].execute.call(this, i);
+					break;
+				case 'map':
+					responseData = await (map as any)[tavily.operation].execute.call(this, i);
 					break;
 				default:
 					throw new NodeOperationError(this.getNode(), `The resource "${resource}" is not known`);

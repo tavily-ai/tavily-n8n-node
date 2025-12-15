@@ -4,6 +4,7 @@ type NodeMap = {
 	search: 'query';
 	extract: 'urls';
 	crawl: 'url';
+	map: 'url';
 };
 
 export type Tavily = AllEntities<NodeMap>;

@@ -1,6 +1,24 @@
 import {INodeProperties} from "n8n-workflow";
 export const extractOptions: INodeProperties[] = [
 	{
+		displayName: 'Query',
+		name: 'query',
+		type: 'string',
+		default: '',
+		description: 'A natural language query describing the information you want to extract from the provided URLs',
+	},
+	{
+		displayName: 'Chunks Per Source',
+		name: 'chunks_per_source',
+		type: 'number',
+		default: 3,
+		description: 'The number of content chunks to retrieve from each source. Each chunk\'s length is maximum 500 characters. Available when query is provided.',
+		typeOptions: {
+			minValue: 1,
+			maxValue: 5,
+		},
+	},
+	{
 		displayName: 'Include Images',
 		name: 'include_images',
 		type: 'boolean',
@@ -292,6 +310,17 @@ export const crawlOptions: INodeProperties[] = [
 		description: 'Natural language instructions for the crawler'
 	},
 	{
+		displayName: 'Chunks Per Source',
+		name: 'chunks_per_source',
+		type: 'number',
+		default: 3,
+		description: 'The number of content chunks to retrieve from each source. Each chunk\'s length is maximum 500 characters. Available when instructions are provided.',
+		typeOptions: {
+			minValue: 1,
+			maxValue: 5,
+		},
+	},
+	{
 		displayName: 'Max Depth',
 		name: 'max_depth',
 		type: 'number',
@@ -396,5 +425,89 @@ export const crawlOptions: INodeProperties[] = [
 		type: 'boolean',
 		default: false,
 		description: 'Whether to include credit usage information in the response.',
+	},
+];
+
+export const mapOptions: INodeProperties[] = [
+	{
+		displayName: 'Instructions',
+		name: 'instructions',
+		type: 'string',
+		default: '',
+		description: 'Natural language instructions guiding the mapping process',
+	},
+	{
+		displayName: 'Max Depth',
+		name: 'max_depth',
+		type: 'number',
+		default: 1,
+		description: 'Defines how far from the base URL the crawler can explore',
+		typeOptions: { minValue: 1 },
+	},
+	{
+		displayName: 'Max Breadth',
+		name: 'max_breadth',
+		type: 'number',
+		default: 20,
+		description: 'Maximum number of links to follow per level of the tree (i.e., per page)',
+		typeOptions: { minValue: 1 },
+	},
+	{
+		displayName: 'Limit',
+		name: 'limit',
+		type: 'number',
+		default: 50,
+		description: 'Total number of links the crawler will process before stopping',
+		typeOptions: { minValue: 1 },
+	},
+	{
+		displayName: 'Select Paths',
+		name: 'select_paths',
+		type: 'string',
+		typeOptions: { multipleValues: true },
+		default: [],
+		description: 'Regex patterns to select only URLs with specific path patterns (e.g., "/docs/.*")',
+	},
+	{
+		displayName: 'Select Domains',
+		name: 'select_domains',
+		type: 'string',
+		typeOptions: { multipleValues: true },
+		default: [],
+		description: 'Regex patterns to select crawling to specific domains or subdomains',
+	},
+	{
+		displayName: 'Exclude Paths',
+		name: 'exclude_paths',
+		type: 'string',
+		typeOptions: { multipleValues: true },
+		default: [],
+		description: 'Regex patterns to exclude URLs with specific path patterns (e.g., "/private/.*")',
+	},
+	{
+		displayName: 'Exclude Domains',
+		name: 'exclude_domains',
+		type: 'string',
+		typeOptions: { multipleValues: true },
+		default: [],
+		description: 'Regex patterns to exclude specific domains or subdomains from crawling',
+	},
+	{
+		displayName: 'Allow External',
+		name: 'allow_external',
+		type: 'boolean',
+		default: true,
+		description: 'Whether to include external domain links in the final results list',
+	},
+	{
+		displayName: 'Timeout',
+		name: 'timeout',
+		type: 'number',
+		default: 150,
+		description: 'Maximum time in seconds to wait for the map operation before timing out (10-150)',
+		typeOptions: {
+			minValue: 10,
+			maxValue: 150,
+		},
 	},
 ];
