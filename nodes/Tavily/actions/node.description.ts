@@ -4,6 +4,7 @@ import { NodeConnectionType, type INodeTypeDescription } from 'n8n-workflow';
 import * as search from './search';
 import * as extract from './extract';
 import * as crawl from './crawl';
+import * as map from './map';
 
 export const description: INodeTypeDescription = {
 	displayName: 'Tavily',
@@ -45,10 +46,15 @@ export const description: INodeTypeDescription = {
 					name: 'Crawl',
 					value: 'crawl',
 				},
+				{
+					name: 'Map',
+					value: 'map',
+				},
 			],
 		},
 		...extract.description,
 		...search.description,
-		...crawl.description
+		...crawl.description,
+		...map.description
 	],
 };

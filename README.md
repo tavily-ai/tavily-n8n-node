@@ -13,6 +13,9 @@ Tavily Search allows you to query the web with powerful filtering capabilities, 
 ### Tavily Crawl
 Tavily Crawl allows you to intelligently crawl a website from a starting URL to discover and extract content across multiple pages. Control depth, breadth, and apply filters to tailor your crawl for comprehensive analysis and content aggregation.
 
+### Tavily Map
+Tavily Map allows you to discover and map out all the URLs within a website starting from a root URL. Unlike Crawl, which extracts content, Map focuses on efficiently building a comprehensive sitemap of a website's structure. This is ideal for understanding site architecture, planning content extraction, or identifying specific pages for further processing.
+
 ## Getting a Tavily API Key
 
 1. Go to the [Tavily website](https://tavily.com) and create an account
@@ -60,6 +63,17 @@ Tavily Crawl allows you to intelligently crawl a website from a starting URL to 
    - Enter the root URL to begin the crawl
    - Configure crawl parameters (max depth, limit, etc.)
 5. Run the workflow to crawl the website and extract content
+
+### Tavily Map
+
+1. Add the "Tavily" node to your n8n workflow
+2. Connect it to the preceding node
+3. Click on 'Map'
+4. In the node's settings:
+   - Select your Tavily API credential
+   - Enter the root URL to begin mapping
+   - Configure map parameters (max depth, limit, filters, etc.)
+5. Run the workflow to map the website's URL structure
 
 ## Parameters
 
@@ -118,6 +132,21 @@ Tavily Crawl allows you to intelligently crawl a website from a starting URL to 
 | Include Favicon | Include the favicon URL for each result |
 | Include Usage | Whether to include credit usage information in the response. NOTE:The value may be 0 if the total use of /extract and /map calls has not yet reached minimum needed. See our [Credits & Pricing documentation](https://docs.tavily.com/documentation/api-credits) for details. |
 
+### Tavily Map Parameters
+
+| Parameter | Description |
+|-----------|-------------|
+| URL | The root URL to begin mapping |
+| Instructions | Natural language instructions guiding the mapping process |
+| Max Depth | Defines how far from the base URL the crawler can explore (≥ 1) |
+| Max Breadth | Maximum number of links to follow per level of the tree (≥ 1) |
+| Limit | Total number of links the crawler will process before stopping (≥ 1) |
+| Select Paths | Regex patterns to select only URLs with specific path patterns |
+| Select Domains | Regex patterns to select crawling to specific domains or subdomains |
+| Exclude Paths | Regex patterns to exclude URLs with specific path patterns |
+| Exclude Domains | Regex patterns to exclude specific domains or subdomains from crawling |
+| Allow External | Whether to include external domain links in the final results list |
+| Timeout | Maximum time in seconds to wait for the map operation (10-150) |
 
 ## Troubleshooting
 
