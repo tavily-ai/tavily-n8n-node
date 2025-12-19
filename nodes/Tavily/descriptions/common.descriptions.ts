@@ -65,7 +65,7 @@ export const extractOptions: INodeProperties[] = [
 		name: 'include_usage',
 		type: 'boolean',
 		default: false,
-		description: 'Whether to include credit usage information in the response.',
+		description: 'Whether to include credit usage information in the response'
 	},
 ];
 
@@ -270,7 +270,7 @@ export const queryOptions: INodeProperties[] = [
 		name: 'include_usage',
 		type: 'boolean',
 		default: false,
-		description: 'Whether to include credit usage information in the response.',
+		description: 'Whether to include credit usage information in the response'
 	},
 ];
 
@@ -424,7 +424,7 @@ export const crawlOptions: INodeProperties[] = [
 		name: 'include_usage',
 		type: 'boolean',
 		default: false,
-		description: 'Whether to include credit usage information in the response.',
+		description: 'Whether to include credit usage information in the response'
 	},
 ];
 
@@ -457,7 +457,7 @@ export const mapOptions: INodeProperties[] = [
 		name: 'limit',
 		type: 'number',
 		default: 50,
-		description: 'Total number of links the crawler will process before stopping',
+		description: 'Max number of results to return',
 		typeOptions: { minValue: 1 },
 	},
 	{
