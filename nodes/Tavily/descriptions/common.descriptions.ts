@@ -104,9 +104,17 @@ export const queryOptions: INodeProperties[] = [
 			{
 				name: 'Advanced',
 				value: 'advanced',
+			},
+			{
+				name: 'Fast (BETA)',
+				value: 'fast',
+			},
+			{
+				name: 'Ultra-Fast (BETA)',
+				value: 'ultra-fast',
 			}
 		],
-		description: 'The depth of the search. advanced search is tailored to retrieve the most relevant sources and content snippets for your query, while basic search provides generic content snippets from each source.',
+		description: 'The depth of the search. basic provides generic content snippets. advanced is tailored to retrieve the most relevant sources. fast is optimized for low latency with high relevance. ultra-fast prioritizes latency above all else.',
 	},
 	{
 		displayName: 'Chunks Per Source',
