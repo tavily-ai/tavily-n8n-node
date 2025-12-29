@@ -106,11 +106,11 @@ export const queryOptions: INodeProperties[] = [
 				value: 'advanced',
 			},
 			{
-				name: 'Fast (BETA)',
+				name: 'Fast',
 				value: 'fast',
 			},
 			{
-				name: 'Ultra-Fast (BETA)',
+				name: 'Ultra-Fast',
 				value: 'ultra-fast',
 			}
 		],
