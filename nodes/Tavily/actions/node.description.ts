@@ -5,6 +5,7 @@ import * as search from './search';
 import * as extract from './extract';
 import * as crawl from './crawl';
 import * as map from './map';
+import * as research from './research';
 
 export const description: INodeTypeDescription = {
 	displayName: 'Tavily',
@@ -46,15 +47,20 @@ export const description: INodeTypeDescription = {
 					name: 'Crawl',
 					value: 'crawl',
 				},
-				{
-					name: 'Map',
-					value: 'map',
-				},
-			],
-		},
+			{
+				name: 'Map',
+				value: 'map',
+			},
+			{
+				name: 'Research',
+				value: 'research',
+			},
+		],
+	},
 		...extract.description,
 		...search.description,
 		...crawl.description,
-		...map.description
+		...map.description,
+		...research.description,
 	],
 };
