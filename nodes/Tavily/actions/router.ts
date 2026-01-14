@@ -5,6 +5,7 @@ import * as search from './search';
 import * as extract from './extract';
 import * as crawl from './crawl';
 import * as map from './map';
+import * as research from './research';
 import type {Tavily} from "./node.type";
 
 
@@ -35,6 +36,9 @@ export async function router(this: IExecuteFunctions) {
 					break;
 				case 'map':
 					responseData = await (map as any)[tavily.operation].execute.call(this, i);
+					break;
+				case 'research':
+					responseData = await (research as any)[tavily.operation].execute.call(this, i);
 					break;
 				default:
 					throw new NodeOperationError(this.getNode(), `The resource "${resource}" is not known`);

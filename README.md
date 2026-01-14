@@ -16,6 +16,9 @@ Tavily Crawl allows you to intelligently crawl a website from a starting URL to 
 ### Tavily Map
 Tavily Map allows you to discover and map out all the URLs within a website starting from a root URL. Unlike Crawl, which extracts content, Map focuses on efficiently building a comprehensive sitemap of a website's structure. This is ideal for understanding site architecture, planning content extraction, or identifying specific pages for further processing.
 
+### Tavily Research
+Tavily Research performs comprehensive research on a given topic by conducting multiple searches, analyzing sources, and generating a detailed research report. Choose between different models (Mini for targeted research, Pro for comprehensive multi-angle analysis) and customize the output format with citation styles and structured schemas.
+
 ## Getting a Tavily API Key
 
 1. Go to the [Tavily website](https://tavily.com) and create an account
@@ -74,6 +77,32 @@ Tavily Map allows you to discover and map out all the URLs within a website star
    - Enter the root URL to begin mapping
    - Configure map parameters (max depth, limit, filters, etc.)
 5. Run the workflow to map the website's URL structure
+
+### Tavily Research
+
+#### Create Research Task
+
+1. Add the "Tavily" node to your n8n workflow
+2. Connect it to the preceding node
+3. Click on 'Research'
+4. Select 'Create Research Task' operation
+5. In the node's settings:
+   - Select your Tavily API credential
+   - Enter your research task or question
+   - Configure model (Auto, Mini, or Pro) and other options
+6. Run the workflow to initiate the research task
+7. The response will include a `request_id` to check the status later
+
+#### Get Research Status
+
+1. Add the "Tavily" node to your n8n workflow
+2. Connect it to the preceding node
+3. Click on 'Research'
+4. Select 'Get Research Status' operation
+5. In the node's settings:
+   - Select your Tavily API credential
+   - Enter the `request_id` from the create research task response
+6. Run the workflow to get the research status and results
 
 ## Parameters
 
@@ -147,6 +176,24 @@ Tavily Map allows you to discover and map out all the URLs within a website star
 | Exclude Domains | Regex patterns to exclude specific domains or subdomains from crawling |
 | Allow External | Whether to include external domain links in the final results list |
 | Timeout | Maximum time in seconds to wait for the map operation (10-150) |
+
+### Tavily Research Parameters
+
+#### Create Research Task
+
+| Parameter | Description |
+|-----------|-------------|
+| Input | The research task or question to investigate |
+| Model | The model used by the research agent (Auto, Mini, or Pro). Mini is optimized for targeted research, Pro provides comprehensive multi-angle research |
+| Citation Format | The format for citations in the research report (Numbered, MLA, APA, or Chicago) |
+| Output Schema | A JSON Schema object that defines the structure of the research output |
+| Stream | Whether to stream research results in real-time as Server-Sent Events (SSE) with progress updates and incremental results |
+
+#### Get Research Status
+
+| Parameter | Description |
+|-----------|-------------|
+| Request ID | The unique identifier of the research task returned from the Create Research Task operation |
 
 ## Troubleshooting
 

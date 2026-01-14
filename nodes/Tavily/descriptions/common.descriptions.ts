@@ -436,6 +436,73 @@ export const crawlOptions: INodeProperties[] = [
 	},
 ];
 
+export const researchOptions: INodeProperties[] = [
+	{
+		displayName: 'Model',
+		name: 'model',
+		type: 'options',
+		default: 'auto',
+		options: [
+			{
+				name: 'Auto',
+				value: 'auto',
+				description: 'Automatically selects the best model for the task',
+			},
+			{
+				name: 'Mini',
+				value: 'mini',
+				description: 'Optimized for targeted, efficient research. Works best for narrow or well-scoped questions.',
+			},
+			{
+				name: 'Pro',
+				value: 'pro',
+				description: 'Provides comprehensive, multi-angle research. Suited for complex topics that span multiple subtopics or domains.',
+			},
+		],
+		description: 'The model used by the research agent',
+	},
+	{
+		displayName: 'Citation Format',
+		name: 'citation_format',
+		type: 'options',
+		default: 'numbered',
+		options: [
+			{
+				name: 'APA',
+				value: 'apa',
+			},
+			{
+				name: 'Chicago',
+				value: 'chicago',
+			},
+			{
+				name: 'MLA',
+				value: 'mla',
+			},
+			{
+				name: 'Numbered',
+				value: 'numbered',
+			},
+		],
+		description: 'The format for citations in the research report',
+	},
+	{
+		displayName: 'Output Schema',
+		name: 'output_schema',
+		type: 'json',
+		default: '',
+		description: 'A JSON Schema object that defines the structure of the research output. When provided, the research response will be structured to match this schema.',
+		placeholder: '{"properties": {"company": {"type": "string", "description": "Company name"}}, "required": ["company"]}',
+	},
+	{
+		displayName: 'Stream',
+		name: 'stream',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to stream the research results as they are generated. When enabled, returns Server-Sent Events (SSE) with real-time progress updates, tool calls, and incremental results.',
+	},
+];
+
 export const mapOptions: INodeProperties[] = [
 	{
 		displayName: 'Instructions',
