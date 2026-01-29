@@ -34,19 +34,15 @@ export const description: INodeTypeDescription = {
 			type: 'options',
 			noDataExpression: true,
 			default: 'search',
-			options: [
-				{
-					name: 'Search',
-					value: 'search',
-				},
-				{
-					name: 'Extract',
-					value: 'extract',
-				},
-				{
-					name: 'Crawl',
-					value: 'crawl',
-				},
+		options: [
+			{
+				name: 'Crawl',
+				value: 'crawl',
+			},
+			{
+				name: 'Extract',
+				value: 'extract',
+			},
 			{
 				name: 'Map',
 				value: 'map',
@@ -54,6 +50,10 @@ export const description: INodeTypeDescription = {
 			{
 				name: 'Research',
 				value: 'research',
+			},
+			{
+				name: 'Search',
+				value: 'search',
 			},
 		],
 	},
