@@ -237,6 +237,13 @@ export const queryOptions: INodeProperties[] = [
 		placeholder: 'example.com',
 	},
 	{
+		displayName: 'Exact Match',
+		name: 'exact_match',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to restrict results to those containing the exact quoted phrase(s) in the query',
+	},
+	{
 		displayName: 'Include Favicon',
 		name: 'include_favicon',
 		type: 'boolean',

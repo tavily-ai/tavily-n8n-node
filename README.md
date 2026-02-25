@@ -123,6 +123,7 @@ Tavily Research performs comprehensive research on a given topic by conducting m
 | Include Image Descriptions | When including images, also add a descriptive text for each image |
 | Include Domains | A list of domains to specifically include in the search results |
 | Exclude Domains | A list of domains to specifically exclude from the search results |
+| Exact Match | Restrict results to those containing the exact quoted phrase(s) in the query |
 | Include Favicon | Include the favicon URL for each result |
 | Include Usage | Whether to include credit usage information in the response. |
 | Country | Boost search results from a specific country. |
