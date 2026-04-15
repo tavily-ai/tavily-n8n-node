@@ -280,6 +280,13 @@ export const queryOptions: INodeProperties[] = [
 		default: false,
 		description: 'Whether to include credit usage information in the response'
 	},
+	{
+		displayName: 'Exact Match',
+		name: 'exact_match',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to only return results containing the exact phrase(s) in quotes in your query'
+	},
 ];
 
 export const queryFields = [
