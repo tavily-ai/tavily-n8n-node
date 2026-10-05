@@ -1,4 +1,5 @@
 import type { IDataObject, IExecuteFunctions, INodeProperties } from 'n8n-workflow';
+import { NodeOperationError } from 'n8n-workflow';
 import { tavilyApiRequest } from '../../transport';
 import { updateDisplayOptions } from '../../display';
 import { researchOptions } from '../../descriptions';
@@ -50,8 +51,11 @@ export async function execute(this: IExecuteFunctions, index: number) {
 	if (body.output_schema && typeof body.output_schema === 'string') {
 		try {
 			body.output_schema = JSON.parse(body.output_schema as string);
-		} catch (e) {
-			throw new Error('Invalid JSON in Output Schema field');
+		} catch {
+			throw new NodeOperationError(this.getNode(), 'Invalid JSON in Output Schema field', {
+				itemIndex: index,
+				description: 'Enter a valid JSON Schema object, or remove the Output Schema option.',
+			});
 		}
 	}
 

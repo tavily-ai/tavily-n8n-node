@@ -224,6 +224,17 @@ An example workflow is in [`examples/ai-agent-search.json`](examples/ai-agent-se
 |-----------|-------------|
 | Request ID | The unique identifier of the research task returned from the Create Research Task operation |
 
+## Development
+
+This package uses n8n's [`n8n-node` tool](https://docs.n8n.io/connect/create-nodes/build-your-node/using-the-n8n-node-tool).
+
+| Command | What it does |
+|---------|--------------|
+| `npm run dev` | Starts a local n8n with this node loaded and rebuilds on changes |
+| `npm run build` | Compiles the node to `dist/` |
+| `npm run lint` | Checks the code against n8n's community node rules |
+| `npm run lint:fix` | Fixes lint issues that can be fixed automatically |
+
 ## Troubleshooting
 
 ### Error Codes

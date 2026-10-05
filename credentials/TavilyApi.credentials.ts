@@ -13,7 +13,7 @@ export class TavilyApi implements ICredentialType {
 
 	documentationUrl = 'https://docs.tavily.com/documentation/quickstart';
 
-	icon: Icon = 'file:icons/img.svg';
+	icon: Icon = { light: 'file:icons/tavily.svg', dark: 'file:icons/tavily.dark.svg' };
 
 	properties: INodeProperties[] = [
 		{
