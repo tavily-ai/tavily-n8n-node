@@ -1,6 +1,6 @@
 {
   "name": "@tavily/n8n-nodes-tavily",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "A community node for n8n to integrate Tavily API for web search and content extraction.",
   "keywords": [
     "n8n-community-node-package"
@@ -8,27 +8,29 @@
   "license": "MIT",
   "homepage": "https://tavily.com",
   "author": {
-    "name": "Tavily AI"
+    "name": "Tavily AI",
+    "email": "tavily-integrations@nebius.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tavily-ai/tavily-n8n-node.git"
+    "url": "git+https://github.com/tavily-ai/tavily-n8n-node.git"
   },
-  "main": "index.js",
   "scripts": {
-    "build": "tsc && gulp build:icons && npm link",
-    "deploy": "tsc && gulp build:icons && npm link && cd ~/.n8n/custom && npm link n8n-nodes-tavily",
-    "dev": "tsc --watch",
+    "build": "n8n-node build",
+    "build:watch": "tsc --watch",
+    "dev": "n8n-node dev",
     "format": "prettier nodes credentials --write",
-    "lint": "eslint nodes credentials package.json",
-    "lintfix": "eslint nodes credentials package.json --fix",
-    "prepublishOnly": "npm run build && npm run lint -c .eslintrc.prepublish.js nodes credentials package.json"
+    "lint": "n8n-node lint",
+    "lint:fix": "n8n-node lint --fix",
+    "release": "n8n-node release",
+    "prepublishOnly": "n8n-node prerelease"
   },
   "files": [
     "dist"
   ],
   "n8n": {
     "n8nNodesApiVersion": 1,
+    "strict": true,
     "credentials": [
       "dist/credentials/TavilyApi.credentials.js"
     ],
@@ -37,16 +39,12 @@
     ]
   },
   "devDependencies": {
-    "@typescript-eslint/parser": "~8.54",
-    "braces": "^3.0.3",
-    "eslint-plugin-n8n-nodes-base": "^1.11.0",
-    "gulp": "^5.0.0",
+    "@n8n/node-cli": "^0.50.5",
+    "eslint": "^9.39.4",
     "n8n-workflow": "^2.28.4",
-    "prettier": "^2.7.1",
-    "typescript": "~4.8.4"
-  },
-  "dependencies": {
-    "lodash": "4.18.1"
+    "prettier": "^3.8.3",
+    "release-it": "^20.2.0",
+    "typescript": "~5.9.3"
   },
   "peerDependencies": {
     "n8n-workflow": "*"

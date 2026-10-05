@@ -1,19 +1,17 @@
 {
-	"node": "n8n-nodes-base.Tavily",
-	"nodeVersion": "1.0",
+	"node": "@tavily/n8n-nodes-tavily",
+	"nodeVersion": "2.0",
 	"codexVersion": "1.0",
-	"categories": [
-		"Miscellaneous"
-	],
+	"categories": ["Miscellaneous"],
 	"resources": {
 		"credentialDocumentation": [
 			{
-				"url": "https://docs.tavily.com/api-reference/introduction"
+				"url": "https://docs.tavily.com/documentation/quickstart"
 			}
 		],
 		"primaryDocumentation": [
 			{
-				"url": "https://docs.tavily.com/welcome"
+				"url": "https://github.com/tavily-ai/tavily-n8n-node#readme"
 			}
 		]
 	}

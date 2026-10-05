@@ -1,4 +1,4 @@
-import type { IDataObject, IExecuteFunctions, INodeProperties } from 'n8n-workflow';
+import type { IExecuteFunctions, INodeProperties } from 'n8n-workflow';
 import { tavilyApiRequest } from '../../transport';
 import { updateDisplayOptions } from '../../display';
 
@@ -36,7 +36,7 @@ export async function execute(this: IExecuteFunctions, index: number) {
 	const responseData = await tavilyApiRequest.call(this, 'GET', endpoint);
 
 	return this.helpers.constructExecutionMetaData(
-		this.helpers.returnJsonArray(responseData as IDataObject[]),
+		this.helpers.returnJsonArray(responseData),
 		{ itemData: { item: index } },
 	);
 }

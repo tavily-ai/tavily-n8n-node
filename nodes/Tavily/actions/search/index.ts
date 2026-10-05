@@ -20,8 +20,8 @@ export const description: INodeProperties[] = [
 			{
 				name: 'Query',
 				value: 'query',
-				description: "Search query",
-				action: 'Search',
+				description: 'Search the web and return ranked results with content snippets',
+				action: 'Search the web',
 			},
 		],
 		default: 'query',

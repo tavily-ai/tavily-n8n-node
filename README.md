@@ -104,6 +104,51 @@ Tavily Research performs comprehensive research on a given topic by conducting m
    - Enter the `request_id` from the create research task response
 6. Run the workflow to get the research status and results
 
+## Use with AI Agents
+
+Tavily can be attached to an n8n **AI Agent** as a tool, so the agent decides when to search the web and writes its own queries.
+
+1. Add a **When chat message received** trigger and connect it to an **AI Agent** node
+2. Attach a chat model (for example OpenAI or Anthropic) to the agent's **Chat Model** input
+3. Click **+** under the agent's **Tool** input, search for **Tavily**, and choose **Search the web**
+4. Select your Tavily API credential
+5. Click **Open chat** and ask a question that needs current information
+
+With the Tavily Tool (node version 2 and later), Search and Extract are ready for agents without extra setup.
+
+**Search**
+
+| Field | Default for agents |
+|-------|-------------------|
+| Query | Written by the model |
+| Topic | Chosen by the model: `general`, `news` or `finance` |
+| Time Range | Chosen by the model: `day`, `week`, `month`, `year`, or no restriction |
+| Search Depth | Chosen by the model: `basic`, `fast`, `ultra-fast` or `advanced`. The model is told to prefer `basic`, because `advanced` costs 2 credits per search |
+| Include Answer | Chosen by the model: `none`, `basic` or `advanced` |
+| Include Domains | Written by the model, separated by commas, or left empty to search the whole web. Added to any domains set under Options |
+| Exclude Domains | Written by the model, separated by commas, or left empty. Added to any domains set under Options |
+| Simplify | On. Returns only the query, answer and each result's title, URL, content and score, without empty fields or IDs |
+| Max Results | 5, unless you set **Max Results** under Options |
+
+**Extract**
+
+| Field | Default for agents |
+|-------|-------------------|
+| URLs | Written by the model, separated by commas |
+| Extract Depth | Chosen by the model: `basic` or `advanced`. The model is told to prefer `basic`, because `advanced` costs twice as many credits |
+
+Dropdowns default to **Let the Model Decide**. To fix a value instead, pick it from the dropdown, and the model no longer gets that input. A value from the model that isn't one of the allowed choices is ignored, and Tavily's default is used. Other options, such as **Max Results**, can be added under **Options**.
+
+In every node version, list fields such as domains, URLs and path patterns accept several values in one entry (domains and URLs separated by commas, path patterns by new lines), and empty entries are skipped.
+
+**Tips**
+
+- Models don't know today's date. For questions about recent events, add it to the agent's **System Message**, for example: `Today is {{ $now.toISODate() }}. Use Tavily Search for current information.`
+- Every search result is sent back to the model on each step. Keep **Max Results** low and leave **Include Raw Content** off unless the agent needs full pages.
+- If the agent keeps searching without answering, raise **Max Iterations** in the agent's options or make the question more specific.
+
+An example workflow with Search and Extract tools is in [`examples/ai-agent-search.json`](examples/ai-agent-search.json). Import it from the workflow menu (**Import from File**), then select your credentials.
+
 ## Parameters
 
 ### Tavily Search Parameters
@@ -112,11 +157,10 @@ Tavily Research performs comprehensive research on a given topic by conducting m
 |-----------|-------------|
 | Query | The search query to execute |
 | Topic | The category of the search (General, News, or Finance) |
-| Search Depth | The depth of the search (Basic or Advanced) |
-| Chunks Per Source (Advanced Search only) | Number of content chunks to retrieve from each source (1-3) |
+| Search Depth | The depth of the search (Basic, Advanced, Fast or Ultra-Fast) |
+| Chunks Per Source | Number of content chunks to retrieve from each source (1-3). Not available with Ultra-Fast search depth |
 | Max Results | Maximum number of search results to return (1-20) |
 | Time Range | Time range filter for results (day, week, month, year) |
-| Days (News Only) | Number of days back from the current date to include (for News topic) |
 | Include Answer | Include an LLM-generated answer in the response (Basic or Advanced) |
 | Include Raw Content | Include cleaned and parsed HTML content of each search result |
 | Include Images | Perform an image search and include the results in the response |
@@ -125,7 +169,7 @@ Tavily Research performs comprehensive research on a given topic by conducting m
 | Exclude Domains | A list of domains to specifically exclude from the search results |
 | Include Favicon | Include the favicon URL for each result |
 | Include Usage | Whether to include credit usage information in the response. |
-| Country | Boost search results from a specific country. |
+| Country | Boost search results from a specific country. Available only for the General topic |
 | Auto Parameters | When enabled, Tavily automatically configures search parameters based on your query's content and intent |
 | Start Date | Will return all results after the specified start date (publish date). Required to be written in the format YYYY-MM-DD |
 | End Date | Will return all results before the specified end date (publish date). Required to be written in the format YYYY-MM-DD |
@@ -194,6 +238,17 @@ Tavily Research performs comprehensive research on a given topic by conducting m
 | Parameter | Description |
 |-----------|-------------|
 | Request ID | The unique identifier of the research task returned from the Create Research Task operation |
+
+## Development
+
+This package uses n8n's [`n8n-node` tool](https://docs.n8n.io/connect/create-nodes/build-your-node/using-the-n8n-node-tool).
+
+| Command | What it does |
+|---------|--------------|
+| `npm run dev` | Starts a local n8n with this node loaded and rebuilds on changes |
+| `npm run build` | Compiles the node to `dist/` |
+| `npm run lint` | Checks the code against n8n's community node rules |
+| `npm run lint:fix` | Fixes lint issues that can be fixed automatically |
 
 ## Troubleshooting
 

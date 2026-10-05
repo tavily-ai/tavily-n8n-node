@@ -1,5 +1,6 @@
 import type { IDataObject, IExecuteFunctions, INodeProperties } from 'n8n-workflow';
 import { tavilyApiRequest } from '../../transport';
+import { cleanListFields, PATTERN_SEPARATOR } from '../lists';
 import { updateDisplayOptions } from '../../display';
 import { crawlOptions } from '../../descriptions/common.descriptions';
 
@@ -37,24 +38,18 @@ const displayOptions = {
 
 export const description = updateDisplayOptions(displayOptions, properties);
 
+const PATTERN_LIST_FIELDS = ['select_paths', 'select_domains', 'exclude_paths', 'exclude_domains'];
+
 export async function execute(this: IExecuteFunctions, index: number) {
   const url = this.getNodeParameter('url', index) as string;
   const options = this.getNodeParameter('options', index) as IDataObject;
 
-  // Ensure boolean values are properly converted
-  const processedOptions: IDataObject = {};
-  for (const [key, value] of Object.entries(options)) {
-    if (typeof value === 'boolean') {
-      processedOptions[key] = value;
-    } else {
-      processedOptions[key] = value;
-    }
-  }
-
   const body: IDataObject = {
     url,
-    ...processedOptions,
+    ...options,
   };
+
+  cleanListFields(body, PATTERN_LIST_FIELDS, PATTERN_SEPARATOR);
 
   const responseData = await tavilyApiRequest.call(this, 'POST', '/crawl', body);
   return this.helpers.returnJsonArray([responseData]);

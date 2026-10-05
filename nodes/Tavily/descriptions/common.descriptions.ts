@@ -1,29 +1,41 @@
-import {INodeProperties} from "n8n-workflow";
+import type { INodeProperties } from 'n8n-workflow';
+
+// Options are listed alphabetically, as n8n's UX guidelines require. Options that only apply
+// with another option are hidden until they apply.
+
+const includeFavicon: INodeProperties = {
+	displayName: 'Include Favicon',
+	name: 'include_favicon',
+	type: 'boolean',
+	default: false,
+	description: 'Whether to include the favicon URL for each result',
+};
+
+const includeUsage: INodeProperties = {
+	displayName: 'Include Usage',
+	name: 'include_usage',
+	type: 'boolean',
+	default: false,
+	description: 'Whether to include credit usage information in the response',
+};
+
 export const extractOptions: INodeProperties[] = [
-	{
-		displayName: 'Query',
-		name: 'query',
-		type: 'string',
-		default: '',
-		description: 'A natural language query describing the information you want to extract from the provided URLs',
-	},
 	{
 		displayName: 'Chunks Per Source',
 		name: 'chunks_per_source',
 		type: 'number',
 		default: 3,
-		description: 'The number of content chunks to retrieve from each source. Each chunk\'s length is maximum 500 characters. Available when query is provided.',
+		description:
+			"The number of content chunks to retrieve from each source. Each chunk's length is maximum 500 characters.",
 		typeOptions: {
 			minValue: 1,
 			maxValue: 5,
 		},
-	},
-	{
-		displayName: 'Include Images',
-		name: 'include_images',
-		type: 'boolean',
-		default: false,
-		description: 'Whether to include a list of images extracted from the URLs. Default is false.',
+		displayOptions: {
+			show: {
+				query: [{ _cnd: { exists: true } }],
+			},
+		},
 	},
 	{
 		displayName: 'Extract Depth',
@@ -38,9 +50,10 @@ export const extractOptions: INodeProperties[] = [
 			{
 				name: 'Advanced',
 				value: 'advanced',
-			}
+			},
 		],
-		description: 'The depth of the extraction process. advanced extraction retrieves more data, including tables and embedded content, with higher success but may increase latency.',
+		description:
+			'The depth of the extraction process. advanced extraction retrieves more data, including tables and embedded content, with higher success but may increase latency.',
 	},
 	{
 		displayName: 'Format',
@@ -49,47 +62,164 @@ export const extractOptions: INodeProperties[] = [
 		default: 'markdown',
 		options: [
 			{ name: 'Markdown', value: 'markdown' },
-			{ name: 'Text', value: 'text' }
+			{ name: 'Text', value: 'text' },
 		],
-		description: 'The format of the extracted web page content. markdown returns content in markdown format. text returns plain text and may increase latency.'
+		description:
+			'The format of the extracted web page content. markdown returns content in markdown format. text returns plain text and may increase latency.',
 	},
+	includeFavicon,
 	{
-		displayName: 'Include Favicon',
-		name: 'include_favicon',
+		displayName: 'Include Images',
+		name: 'include_images',
 		type: 'boolean',
 		default: false,
-		description: 'Whether to include the favicon URL for each result'
+		description: 'Whether to include a list of images extracted from the URLs',
 	},
+	includeUsage,
 	{
-		displayName: 'Include Usage',
-		name: 'include_usage',
-		type: 'boolean',
-		default: false,
-		description: 'Whether to include credit usage information in the response'
+		displayName: 'Query',
+		name: 'query',
+		type: 'string',
+		default: '',
+		description:
+			'A natural language query describing the information you want to extract from the provided URLs. Enables Chunks Per Source.',
 	},
 ];
 
 export const queryOptions: INodeProperties[] = [
 	{
-		displayName: 'Topic',
-		name: 'topic',
+		displayName: 'Auto Parameters',
+		name: 'auto_parameters',
+		type: 'boolean',
+		default: false,
+		description:
+			"Whether Tavily automatically configures search parameters based on your query's content and intent. Options you set explicitly still apply.",
+	},
+	{
+		displayName: 'Chunks Per Source',
+		name: 'chunks_per_source',
+		type: 'number',
+		default: 3,
+		description:
+			"The number of content chunks to retrieve from each source. Each chunk's length is maximum 500 characters.",
+		typeOptions: {
+			minValue: 1,
+			maxValue: 3,
+		},
+		displayOptions: {
+			hide: {
+				search_depth: ['ultra-fast'],
+			},
+		},
+	},
+	{
+		displayName: 'Country',
+		name: 'country',
+		type: 'string',
+		default: '',
+		description:
+			'Boost search results from a specific country. Available only when the topic is general. Full list of options: https://docs.tavily.com/documentation/api-reference/endpoint/search#body-country.',
+		displayOptions: {
+			hide: {
+				topic: ['news', 'finance'],
+			},
+		},
+	},
+	{
+		displayName: 'End Date',
+		name: 'end_date',
+		type: 'string',
+		default: '',
+		description:
+			'Will return all results before the specified end date (publish date). Required to be written in the format YYYY-MM-DD.',
+		placeholder: '2025-02-09',
+	},
+	{
+		displayName: 'Exact Match',
+		name: 'exact_match',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to only return results containing the exact phrase(s) in quotes in your query',
+	},
+	{
+		displayName: 'Exclude Domains',
+		name: 'exclude_domains',
+		type: 'string',
+		typeOptions: {
+			multipleValues: true,
+		},
+		default: [],
+		description: 'A list of domains to exclude from the search results',
+		placeholder: 'example.com',
+	},
+	{
+		displayName: 'Include Answer',
+		name: 'include_answer',
 		type: 'options',
-		default: 'general',
-		description: 'The category of the search',
+		default: 'basic',
+		description: 'Include an LLM-generated answer to the provided query',
 		options: [
 			{
-				name: 'General',
-				value: 'general',
+				name: 'Basic',
+				value: 'basic',
+				description: 'Returns a quick answer',
 			},
 			{
-				name: 'News',
-				value: 'news',
+				name: 'Advanced',
+				value: 'advanced',
+				description: 'Returns a more detailed answer',
 			},
-			{
-				name: 'Finance',
-				value: 'finance',
-			}
 		],
+	},
+	{
+		displayName: 'Include Domains',
+		name: 'include_domains',
+		type: 'string',
+		typeOptions: {
+			multipleValues: true,
+		},
+		default: [],
+		description: 'A list of domains to specifically include in the search results',
+		placeholder: 'example.com',
+	},
+	includeFavicon,
+	{
+		displayName: 'Include Image Descriptions',
+		name: 'include_image_descriptions',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to add a descriptive text for each image',
+		displayOptions: {
+			show: {
+				include_images: [true],
+			},
+		},
+	},
+	{
+		displayName: 'Include Images',
+		name: 'include_images',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to perform an image search and include the results in the response',
+	},
+	{
+		displayName: 'Include Raw Content',
+		name: 'include_raw_content',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to include the cleaned and parsed HTML content of each search result',
+	},
+	includeUsage,
+	{
+		displayName: 'Max Results',
+		name: 'max_results',
+		type: 'number',
+		default: 5,
+		description: 'The maximum number of search results to return',
+		typeOptions: {
+			minValue: 1,
+			maxValue: 20,
+		},
 	},
 	{
 		displayName: 'Search Depth',
@@ -112,31 +242,19 @@ export const queryOptions: INodeProperties[] = [
 			{
 				name: 'Ultra-Fast',
 				value: 'ultra-fast',
-			}
+			},
 		],
-		description: 'The depth of the search. basic provides generic content snippets. advanced is tailored to retrieve the most relevant sources. fast is optimized for low latency with high relevance. ultra-fast prioritizes latency above all else.',
+		description:
+			'The depth of the search. basic provides generic content snippets. advanced is tailored to retrieve the most relevant sources. fast is optimized for low latency with high relevance. ultra-fast prioritizes latency above all else.',
 	},
 	{
-		displayName: 'Chunks Per Source',
-		name: 'chunks_per_source',
-		type: 'number',
-		default: 3,
-		description: 'The number of content chunks to retrieve from each source. Each chunk\'s length is maximum 500 characters. Available only when search_depth is advanced.',
-		typeOptions: {
-			minValue: 1,
-			maxValue: 3,
-		},
-	},
-	{
-		displayName: 'Max Results',
-		name: 'max_results',
-		type: 'number',
-		default: 5,
-		description: 'The maximum number of search results to return',
-		typeOptions: {
-			minValue: 1,
-			maxValue: 20,
-		},
+		displayName: 'Start Date',
+		name: 'start_date',
+		type: 'string',
+		default: '',
+		description:
+			'Will return all results after the specified start date (publish date). Required to be written in the format YYYY-MM-DD.',
+		placeholder: '2025-02-09',
 	},
 	{
 		displayName: 'Time Range',
@@ -159,221 +277,42 @@ export const queryOptions: INodeProperties[] = [
 			{
 				name: 'Year',
 				value: 'year',
-			}
+			},
 		],
-		description: 'The time range back from the current date to filter results. Useful when looking for sources that have published data.',
+		description:
+			'The time range back from the current date to filter results. Useful when looking for sources that have published data.',
 	},
 	{
-		displayName: 'Days',
-		name: 'days',
-		type: 'number',
-		default: 3,
-		description: 'Number of days back from the current date to include. Available only if topic is news.',
-		typeOptions: {
-			minValue: 1,
-			maxValue: 365,
-		},
-	},
-	{
-		displayName: 'Include Answer',
-		name: 'include_answer',
+		displayName: 'Topic',
+		name: 'topic',
 		type: 'options',
-		default: 'basic',
-		description: 'Include an LLM-generated answer to the provided query',
+		default: 'general',
+		description: 'The category of the search',
 		options: [
 			{
-				name: 'Basic',
-				value: 'basic',
-				description: 'Returns a quick answer',
+				name: 'General',
+				value: 'general',
 			},
 			{
-				name: 'Advanced',
-				value: 'advanced',
-				description: 'Returns a more detailed answer',
-			}
+				name: 'News',
+				value: 'news',
+			},
+			{
+				name: 'Finance',
+				value: 'finance',
+			},
 		],
 	},
-	{
-		displayName: 'Include Raw Content',
-		name: 'include_raw_content',
-		type: 'boolean',
-		default: false,
-		description: 'Whether to include the cleaned and parsed HTML content of each search result',
-	},
-	{
-		displayName: 'Include Images',
-		name: 'include_images',
-		type: 'boolean',
-		default: false,
-		description: 'Whether to perform an image search and include the results in the response',
-	},
-	{
-		displayName: 'Include Image Descriptions',
-		name: 'include_image_descriptions',
-		type: 'boolean',
-		default: false,
-		description: 'Whether to add a descriptive text for each image when include_images is true',
-	},
-	{
-		displayName: 'Include Domains',
-		name: 'include_domains',
-		type: 'string',
-		typeOptions: {
-			multipleValues: true,
-		},
-		default: [],
-		description: 'A list of domains to specifically include in the search results',
-		placeholder: 'example.com',
-	},
+];
+
+const crawlAndMapFilters: INodeProperties[] = [
 	{
 		displayName: 'Exclude Domains',
 		name: 'exclude_domains',
 		type: 'string',
-		typeOptions: {
-			multipleValues: true,
-		},
-		default: [],
-		description: 'A list of domains to exclude from the search results',
-		placeholder: 'example.com',
-	},
-	{
-		displayName: 'Include Favicon',
-		name: 'include_favicon',
-		type: 'boolean',
-		default: false,
-		description: 'Whether to include the favicon URL for each result'
-	},
-	{
-		displayName: 'Auto Parameters',
-		name: 'auto_parameters',
-		type: 'boolean',
-		default: false,
-		description: 'Whether auto_parameters is enabled, Tavily automatically configures search parameters based on your query\'s content and intent',
-	},
-	{
-		displayName: 'Start Date',
-		name: 'start_date',
-		type: 'string',
-		default: '',
-		description: 'Will return all results after the specified start date (publish date). Required to be written in the format YYYY-MM-DD.',
-		placeholder: '2025-02-09'
-	},
-	{
-		displayName: 'End Date',
-		name: 'end_date',
-		type: 'string',
-		default: '',
-		description: 'Will return all results before the specified end date (publish date). Required to be written in the format YYYY-MM-DD.',
-		placeholder: '2000-01-28'
-	},
-	{
-		displayName: 'Country',
-		name: 'country',
-		type: 'string',
-		default: '',
-		description: 'Boost search results from a specific country. This will prioritize content from the selected country in the search results. Available only if topic is general. Full available options: https://docs.tavily.com/documentation/api-reference/endpoint/search#body-country'
-	},
-	{
-		displayName: 'Include Usage',
-		name: 'include_usage',
-		type: 'boolean',
-		default: false,
-		description: 'Whether to include credit usage information in the response'
-	},
-	{
-		displayName: 'Exact Match',
-		name: 'exact_match',
-		type: 'boolean',
-		default: false,
-		description: 'Whether to only return results containing the exact phrase(s) in quotes in your query'
-	},
-];
-
-export const queryFields = [
-	{
-		name: 'Child Folder Count',
-		value: 'childFolderCount',
-	},
-	{
-		name: 'Display Name',
-		value: 'displayName',
-	},
-	{
-		name: 'Is Hidden',
-		value: 'isHidden',
-	},
-	{
-		name: 'Parent Folder ID',
-		value: 'parentFolderId',
-	},
-	{
-		name: 'Total Item Count',
-		value: 'totalItemCount',
-	},
-	{
-		name: 'Unread Item Count',
-		value: 'unreadItemCount',
-	},
-];
-
-export const crawlOptions: INodeProperties[] = [
-	{
-		displayName: 'Instructions',
-		name: 'instructions',
-		type: 'string',
-		default: '',
-		description: 'Natural language instructions for the crawler'
-	},
-	{
-		displayName: 'Chunks Per Source',
-		name: 'chunks_per_source',
-		type: 'number',
-		default: 3,
-		description: 'The number of content chunks to retrieve from each source. Each chunk\'s length is maximum 500 characters. Available when instructions are provided.',
-		typeOptions: {
-			minValue: 1,
-			maxValue: 5,
-		},
-	},
-	{
-		displayName: 'Max Depth',
-		name: 'max_depth',
-		type: 'number',
-		default: 1,
-		description: 'Max depth of the crawl',
-		typeOptions: { minValue: 1 }
-	},
-	{
-		displayName: 'Max Breadth',
-		name: 'max_breadth',
-		type: 'number',
-		default: 20,
-		description: 'Max number of links to follow per level',
-		typeOptions: { minValue: 1 }
-	},
-	{
-		displayName: 'Limit',
-		name: 'limit',
-		type: 'number',
-		default: 50,
-		description: 'Max number of results to return',
-		typeOptions: { minValue: 1 }
-	},
-	{
-		displayName: 'Select Paths',
-		name: 'select_paths',
-		type: 'string',
 		typeOptions: { multipleValues: true },
 		default: [],
-		description: 'Regex patterns to select only URLs with specific path patterns'
-	},
-	{
-		displayName: 'Select Domains',
-		name: 'select_domains',
-		type: 'string',
-		typeOptions: { multipleValues: true },
-		default: [],
-		description: 'Regex patterns to select crawling to specific domains or subdomains'
+		description: 'Regex patterns to exclude specific domains or subdomains from crawling',
 	},
 	{
 		displayName: 'Exclude Paths',
@@ -381,30 +320,36 @@ export const crawlOptions: INodeProperties[] = [
 		type: 'string',
 		typeOptions: { multipleValues: true },
 		default: [],
-		description: 'Regex patterns to exclude URLs with specific path patterns'
+		description: 'Regex patterns to exclude URLs with specific path patterns (e.g., "/private/.*")',
 	},
-	{
-		displayName: 'Exclude Domains',
-		name: 'exclude_domains',
-		type: 'string',
-		typeOptions: { multipleValues: true },
-		default: [],
-		description: 'Regex patterns to exclude specific domains or subdomains from crawling'
-	},
+];
+
+export const crawlOptions: INodeProperties[] = [
 	{
 		displayName: 'Allow External',
 		name: 'allow_external',
 		type: 'boolean',
 		default: false,
-		description: 'Whether to allow following links that go to external domains'
+		description: 'Whether to allow following links that go to external domains',
 	},
 	{
-		displayName: 'Include Images',
-		name: 'include_images',
-		type: 'boolean',
-		default: false,
-		description: 'Whether to include images in the crawl results'
+		displayName: 'Chunks Per Source',
+		name: 'chunks_per_source',
+		type: 'number',
+		default: 3,
+		description:
+			"The number of content chunks to retrieve from each source. Each chunk's length is maximum 500 characters.",
+		typeOptions: {
+			minValue: 1,
+			maxValue: 5,
+		},
+		displayOptions: {
+			show: {
+				instructions: [{ _cnd: { exists: true } }],
+			},
+		},
 	},
+	...crawlAndMapFilters,
 	{
 		displayName: 'Extract Depth',
 		name: 'extract_depth',
@@ -412,9 +357,10 @@ export const crawlOptions: INodeProperties[] = [
 		default: 'basic',
 		options: [
 			{ name: 'Basic', value: 'basic' },
-			{ name: 'Advanced', value: 'advanced' }
+			{ name: 'Advanced', value: 'advanced' },
 		],
-		description: 'Extraction depth'
+		description:
+			'The depth of the extraction process. advanced extraction retrieves more data, including tables and embedded content, but may increase latency.',
 	},
 	{
 		displayName: 'Format',
@@ -423,51 +369,69 @@ export const crawlOptions: INodeProperties[] = [
 		default: 'markdown',
 		options: [
 			{ name: 'Markdown', value: 'markdown' },
-			{ name: 'Text', value: 'text' }
+			{ name: 'Text', value: 'text' },
 		],
-		description: 'Format of the extracted web page content'
+		description: 'The format of the extracted web page content',
 	},
+	includeFavicon,
 	{
-		displayName: 'Include Favicon',
-		name: 'include_favicon',
+		displayName: 'Include Images',
+		name: 'include_images',
 		type: 'boolean',
 		default: false,
-		description: 'Whether to include the favicon URL for each result'
+		description: 'Whether to include images in the crawl results',
+	},
+	includeUsage,
+	{
+		displayName: 'Instructions',
+		name: 'instructions',
+		type: 'string',
+		default: '',
+		description: 'Natural language instructions for the crawler. Enables Chunks Per Source.',
 	},
 	{
-		displayName: 'Include Usage',
-		name: 'include_usage',
-		type: 'boolean',
-		default: false,
-		description: 'Whether to include credit usage information in the response'
+		displayName: 'Limit',
+		name: 'limit',
+		type: 'number',
+		default: 50,
+		description: 'Max number of results to return',
+		typeOptions: { minValue: 1 },
+	},
+	{
+		displayName: 'Max Breadth',
+		name: 'max_breadth',
+		type: 'number',
+		default: 20,
+		description: 'Max number of links to follow per level',
+		typeOptions: { minValue: 1 },
+	},
+	{
+		displayName: 'Max Depth',
+		name: 'max_depth',
+		type: 'number',
+		default: 1,
+		description: 'Max depth of the crawl',
+		typeOptions: { minValue: 1 },
+	},
+	{
+		displayName: 'Select Domains',
+		name: 'select_domains',
+		type: 'string',
+		typeOptions: { multipleValues: true },
+		default: [],
+		description: 'Regex patterns to select crawling to specific domains or subdomains',
+	},
+	{
+		displayName: 'Select Paths',
+		name: 'select_paths',
+		type: 'string',
+		typeOptions: { multipleValues: true },
+		default: [],
+		description: 'Regex patterns to select only URLs with specific path patterns (e.g., "/docs/.*")',
 	},
 ];
 
 export const researchOptions: INodeProperties[] = [
-	{
-		displayName: 'Model',
-		name: 'model',
-		type: 'options',
-		default: 'auto',
-		options: [
-			{
-				name: 'Auto',
-				value: 'auto',
-				description: 'Automatically selects the best model for the task',
-			},
-			{
-				name: 'Mini',
-				value: 'mini',
-				description: 'Optimized for targeted, efficient research. Works best for narrow or well-scoped questions.',
-			},
-			{
-				name: 'Pro',
-				value: 'pro',
-				description: 'Provides comprehensive, multi-angle research. Suited for complex topics that span multiple subtopics or domains.',
-			},
-		],
-		description: 'The model used by the research agent',
-	},
 	{
 		displayName: 'Citation Format',
 		name: 'citation_format',
@@ -494,23 +458,60 @@ export const researchOptions: INodeProperties[] = [
 		description: 'The format for citations in the research report',
 	},
 	{
+		displayName: 'Model',
+		name: 'model',
+		type: 'options',
+		default: 'auto',
+		options: [
+			{
+				name: 'Auto',
+				value: 'auto',
+				description: 'Automatically selects the best model for the task',
+			},
+			{
+				name: 'Mini',
+				value: 'mini',
+				description:
+					'Optimized for targeted, efficient research. Works best for narrow or well-scoped questions.',
+			},
+			{
+				name: 'Pro',
+				value: 'pro',
+				description:
+					'Provides comprehensive, multi-angle research. Suited for complex topics that span multiple subtopics or domains.',
+			},
+		],
+		description: 'The model used by the research agent',
+	},
+	{
 		displayName: 'Output Schema',
 		name: 'output_schema',
 		type: 'json',
 		default: '',
-		description: 'A JSON Schema object that defines the structure of the research output. When provided, the research response will be structured to match this schema.',
-		placeholder: '{"properties": {"company": {"type": "string", "description": "Company name"}}, "required": ["company"]}',
+		description:
+			'A JSON Schema object that defines the structure of the research output. When provided, the research response will be structured to match this schema.',
+		placeholder:
+			'{"properties": {"company": {"type": "string", "description": "Company name"}}, "required": ["company"]}',
 	},
 	{
 		displayName: 'Stream',
 		name: 'stream',
 		type: 'boolean',
 		default: false,
-		description: 'Whether to stream the research results as they are generated. When enabled, returns Server-Sent Events (SSE) with real-time progress updates, tool calls, and incremental results.',
+		description:
+			'Whether to stream the research results as they are generated. When enabled, returns Server-Sent Events (SSE) with real-time progress updates, tool calls, and incremental results.',
 	},
 ];
 
 export const mapOptions: INodeProperties[] = [
+	{
+		displayName: 'Allow External',
+		name: 'allow_external',
+		type: 'boolean',
+		default: true,
+		description: 'Whether to include external domain links in the final results list',
+	},
+	...crawlAndMapFilters,
 	{
 		displayName: 'Instructions',
 		name: 'instructions',
@@ -519,11 +520,11 @@ export const mapOptions: INodeProperties[] = [
 		description: 'Natural language instructions guiding the mapping process',
 	},
 	{
-		displayName: 'Max Depth',
-		name: 'max_depth',
+		displayName: 'Limit',
+		name: 'limit',
 		type: 'number',
-		default: 1,
-		description: 'Defines how far from the base URL the crawler can explore',
+		default: 50,
+		description: 'Max number of results to return',
 		typeOptions: { minValue: 1 },
 	},
 	{
@@ -535,20 +536,12 @@ export const mapOptions: INodeProperties[] = [
 		typeOptions: { minValue: 1 },
 	},
 	{
-		displayName: 'Limit',
-		name: 'limit',
+		displayName: 'Max Depth',
+		name: 'max_depth',
 		type: 'number',
-		default: 50,
-		description: 'Max number of results to return',
+		default: 1,
+		description: 'Defines how far from the base URL the crawler can explore',
 		typeOptions: { minValue: 1 },
-	},
-	{
-		displayName: 'Select Paths',
-		name: 'select_paths',
-		type: 'string',
-		typeOptions: { multipleValues: true },
-		default: [],
-		description: 'Regex patterns to select only URLs with specific path patterns (e.g., "/docs/.*")',
 	},
 	{
 		displayName: 'Select Domains',
@@ -559,27 +552,12 @@ export const mapOptions: INodeProperties[] = [
 		description: 'Regex patterns to select crawling to specific domains or subdomains',
 	},
 	{
-		displayName: 'Exclude Paths',
-		name: 'exclude_paths',
+		displayName: 'Select Paths',
+		name: 'select_paths',
 		type: 'string',
 		typeOptions: { multipleValues: true },
 		default: [],
-		description: 'Regex patterns to exclude URLs with specific path patterns (e.g., "/private/.*")',
-	},
-	{
-		displayName: 'Exclude Domains',
-		name: 'exclude_domains',
-		type: 'string',
-		typeOptions: { multipleValues: true },
-		default: [],
-		description: 'Regex patterns to exclude specific domains or subdomains from crawling',
-	},
-	{
-		displayName: 'Allow External',
-		name: 'allow_external',
-		type: 'boolean',
-		default: true,
-		description: 'Whether to include external domain links in the final results list',
+		description: 'Regex patterns to select only URLs with specific path patterns (e.g., "/docs/.*")',
 	},
 	{
 		displayName: 'Timeout',

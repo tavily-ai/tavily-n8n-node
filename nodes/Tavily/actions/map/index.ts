@@ -19,7 +19,7 @@ export const description: INodeProperties[] = [
         name: 'URL',
         value: 'url',
         description: 'Discover all internal links starting from a base URL',
-        action: 'Map',
+        action: 'Discover the pages of a website',
       },
     ],
     default: 'url',
