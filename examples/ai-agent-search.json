@@ -1,0 +1,64 @@
+{
+  "name": "AI Agent with Tavily Search",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [0, 0],
+      "id": "0b4c6f0e-6a3f-4d7e-9a43-6f1d2c1b7a01",
+      "name": "When chat message received",
+      "webhookId": "5d3b3f7a-1c2e-4b8f-a0a9-2f6e8d9c4b11"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=You are a helpful assistant. Today is {{ $now.toISODate() }}. Use the Tavily Search tool for anything that needs current or factual information from the web, and cite the URLs you used."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [224, 0],
+      "id": "7a2e9b3c-5d4f-4e6a-8b1c-3d2f4e5a6b02",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [96, 208],
+      "id": "1c3d5e7f-9a2b-4c6d-8e0f-1a3b5c7d9e03",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "resource": "search",
+        "operation": "query",
+        "options": {}
+      },
+      "type": "@tavily/n8n-nodes-tavily.tavilyTool",
+      "typeVersion": 2,
+      "position": [384, 208],
+      "id": "9e8d7c6b-5a4f-4e3d-8c2b-1a0f9e8d7c04",
+      "name": "Search the web in Tavily"
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [[{ "node": "AI Agent", "type": "main", "index": 0 }]]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [[{ "node": "AI Agent", "type": "ai_languageModel", "index": 0 }]]
+    },
+    "Search the web in Tavily": {
+      "ai_tool": [[{ "node": "AI Agent", "type": "ai_tool", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

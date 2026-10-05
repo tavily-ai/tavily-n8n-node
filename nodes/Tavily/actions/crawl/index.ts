@@ -19,7 +19,7 @@ export const description: INodeProperties[] = [
         name: 'URL',
         value: 'url',
         description: 'The root URL to begin the crawl',
-        action: 'Crawl',
+        action: 'Crawl a website',
       },
     ],
     default: 'url',

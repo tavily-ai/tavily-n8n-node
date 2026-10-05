@@ -12,9 +12,10 @@ export const description: INodeTypeDescription = {
 	name: 'tavily',
 	group: ['transform'],
 	icon: 'file:img.svg',
-	version: 1,
+	version: [1, 2],
+	defaultVersion: 2,
 	subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-	description: 'Tavily API',
+	description: 'Search the web, extract page content, crawl and map websites, and run in-depth research with Tavily',
 	defaults: {
 		name: 'Tavily',
 	},

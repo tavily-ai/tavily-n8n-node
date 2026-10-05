@@ -104,6 +104,36 @@ Tavily Research performs comprehensive research on a given topic by conducting m
    - Enter the `request_id` from the create research task response
 6. Run the workflow to get the research status and results
 
+## Use with AI Agents
+
+Tavily can be attached to an n8n **AI Agent** as a tool, so the agent decides when to search the web and writes its own queries.
+
+1. Add a **When chat message received** trigger and connect it to an **AI Agent** node
+2. Attach a chat model (for example OpenAI or Anthropic) to the agent's **Chat Model** input
+3. Click **+** under the agent's **Tool** input, search for **Tavily**, and choose **Search the web**
+4. Select your Tavily API credential
+5. Click **Open chat** and ask a question that needs current information
+
+With the Tavily Tool (node version 2 and later), Search is ready for agents without extra setup:
+
+| Field | Default for agents |
+|-------|-------------------|
+| Query | Written by the model |
+| Topic | Chosen by the model: `general`, `news` or `finance` |
+| Time Range | Chosen by the model: `day`, `week`, `month`, `year`, or no restriction |
+| Simplify | On. Returns only the query, answer and each result's title, URL, content and score, without empty fields or IDs |
+| Max Results | 5, unless you set **Max Results** under Options |
+
+To fix a value instead of letting the model choose, click the model-defined field and pick a value. Other options, such as **Include Domains** or **Search Depth**, can be added under **Options**.
+
+**Tips**
+
+- Models don't know today's date. For questions about recent events, add it to the agent's **System Message**, for example: `Today is {{ $now.toISODate() }}. Use Tavily Search for current information.`
+- Every search result is sent back to the model on each step. Keep **Max Results** low and leave **Include Raw Content** off unless the agent needs full pages.
+- If the agent keeps searching without answering, raise **Max Iterations** in the agent's options or make the question more specific.
+
+An example workflow is in [`examples/ai-agent-search.json`](examples/ai-agent-search.json). Import it from the workflow menu (**Import from File**), then select your credentials.
+
 ## Parameters
 
 ### Tavily Search Parameters

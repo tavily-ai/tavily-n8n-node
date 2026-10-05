@@ -21,7 +21,7 @@ export const description: INodeProperties[] = [
 				name: 'URLs',
 				value: 'urls',
 				description: "Extract raw content from URLs",
-				action: 'Extract',
+				action: 'Extract content from web pages',
 			},
 		],
 		default: 'urls',
