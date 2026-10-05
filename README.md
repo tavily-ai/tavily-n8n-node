@@ -114,17 +114,32 @@ Tavily can be attached to an n8n **AI Agent** as a tool, so the agent decides wh
 4. Select your Tavily API credential
 5. Click **Open chat** and ask a question that needs current information
 
-With the Tavily Tool (node version 2 and later), Search is ready for agents without extra setup:
+With the Tavily Tool (node version 2 and later), Search and Extract are ready for agents without extra setup.
+
+**Search**
 
 | Field | Default for agents |
 |-------|-------------------|
 | Query | Written by the model |
 | Topic | Chosen by the model: `general`, `news` or `finance` |
 | Time Range | Chosen by the model: `day`, `week`, `month`, `year`, or no restriction |
+| Search Depth | Chosen by the model: `basic`, `fast`, `ultra-fast` or `advanced`. The model is told to prefer `basic`, because `advanced` costs 2 credits per search |
+| Include Answer | Chosen by the model: `none`, `basic` or `advanced` |
+| Include Domains | Written by the model, separated by commas, or left empty to search the whole web. Added to any domains set under Options |
+| Exclude Domains | Written by the model, separated by commas, or left empty. Added to any domains set under Options |
 | Simplify | On. Returns only the query, answer and each result's title, URL, content and score, without empty fields or IDs |
 | Max Results | 5, unless you set **Max Results** under Options |
 
-To fix a value instead of letting the model choose, click the model-defined field and pick a value. Other options, such as **Include Domains** or **Search Depth**, can be added under **Options**.
+**Extract**
+
+| Field | Default for agents |
+|-------|-------------------|
+| URLs | Written by the model, separated by commas |
+| Extract Depth | Chosen by the model: `basic` or `advanced`. The model is told to prefer `basic`, because `advanced` costs twice as many credits |
+
+Dropdowns default to **Let the Model Decide**. To fix a value instead, pick it from the dropdown, and the model no longer gets that input. A value from the model that isn't one of the allowed choices is ignored, and Tavily's default is used. Other options, such as **Max Results**, can be added under **Options**.
+
+In every node version, list fields such as domains, URLs and path patterns accept several values in one entry (domains and URLs separated by commas, path patterns by new lines), and empty entries are skipped.
 
 **Tips**
 
@@ -132,7 +147,7 @@ To fix a value instead of letting the model choose, click the model-defined fiel
 - Every search result is sent back to the model on each step. Keep **Max Results** low and leave **Include Raw Content** off unless the agent needs full pages.
 - If the agent keeps searching without answering, raise **Max Iterations** in the agent's options or make the question more specific.
 
-An example workflow is in [`examples/ai-agent-search.json`](examples/ai-agent-search.json). Import it from the workflow menu (**Import from File**), then select your credentials.
+An example workflow with Search and Extract tools is in [`examples/ai-agent-search.json`](examples/ai-agent-search.json). Import it from the workflow menu (**Import from File**), then select your credentials.
 
 ## Parameters
 
