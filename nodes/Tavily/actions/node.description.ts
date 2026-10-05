@@ -1,5 +1,5 @@
 /* eslint-disable n8n-nodes-base/node-filename-against-convention */
-import { NodeConnectionType, type INodeTypeDescription } from 'n8n-workflow';
+import { NodeConnectionTypes, type INodeTypeDescription } from 'n8n-workflow';
 
 import * as search from './search';
 import * as extract from './extract';
@@ -19,7 +19,7 @@ export const description: INodeTypeDescription = {
 		name: 'Tavily',
 	},
 	usableAsTool: true,
-	inputs: [NodeConnectionType.Main],
+	inputs: [NodeConnectionTypes.Main],
 	outputs: `={{['main']}}` as const,
 	credentials: [
 		{
