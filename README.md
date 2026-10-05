@@ -142,11 +142,10 @@ An example workflow is in [`examples/ai-agent-search.json`](examples/ai-agent-se
 |-----------|-------------|
 | Query | The search query to execute |
 | Topic | The category of the search (General, News, or Finance) |
-| Search Depth | The depth of the search (Basic or Advanced) |
-| Chunks Per Source (Advanced Search only) | Number of content chunks to retrieve from each source (1-3) |
+| Search Depth | The depth of the search (Basic, Advanced, Fast or Ultra-Fast) |
+| Chunks Per Source | Number of content chunks to retrieve from each source (1-3). Not available with Ultra-Fast search depth |
 | Max Results | Maximum number of search results to return (1-20) |
 | Time Range | Time range filter for results (day, week, month, year) |
-| Days (News Only) | Number of days back from the current date to include (for News topic) |
 | Include Answer | Include an LLM-generated answer in the response (Basic or Advanced) |
 | Include Raw Content | Include cleaned and parsed HTML content of each search result |
 | Include Images | Perform an image search and include the results in the response |
@@ -155,7 +154,7 @@ An example workflow is in [`examples/ai-agent-search.json`](examples/ai-agent-se
 | Exclude Domains | A list of domains to specifically exclude from the search results |
 | Include Favicon | Include the favicon URL for each result |
 | Include Usage | Whether to include credit usage information in the response. |
-| Country | Boost search results from a specific country. |
+| Country | Boost search results from a specific country. Available only for the General topic |
 | Auto Parameters | When enabled, Tavily automatically configures search parameters based on your query's content and intent |
 | Start Date | Will return all results after the specified start date (publish date). Required to be written in the format YYYY-MM-DD |
 | End Date | Will return all results before the specified end date (publish date). Required to be written in the format YYYY-MM-DD |

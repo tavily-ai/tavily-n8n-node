@@ -60,7 +60,7 @@ export async function execute(this: IExecuteFunctions, index: number) {
 	const responseData = await tavilyApiRequest.call(this, 'POST', endpoint, body);
 
 	return this.helpers.constructExecutionMetaData(
-		this.helpers.returnJsonArray(responseData as IDataObject[]),
+		this.helpers.returnJsonArray(responseData),
 		{ itemData: { item: index } },
 	);
 }

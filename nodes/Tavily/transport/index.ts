@@ -23,7 +23,7 @@ export async function tavilyApiRequest(
 	query: IDataObject = {},
 	uri?: string,
 	headers: IDataObject = {},
-) {
+): Promise<IDataObject> {
 	const options: IHttpRequestOptions = {
 		headers: {
 			'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ export async function tavilyApiRequest(
 		throw tavilyApiError(this.getNode(), response);
 	}
 
-	return response.body;
+	return response.body as IDataObject;
 }
 
 /**
