@@ -1,6 +1,6 @@
 {
-	"node": "@tavily/n8n-nodes-tavily",
-	"nodeVersion": "2.0",
+	"node": "@tavily/n8n-nodes-tavily.tavily",
+	"nodeVersion": "1.0",
 	"codexVersion": "1.0",
 	"categories": ["Miscellaneous"],
 	"resources": {
