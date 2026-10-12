@@ -25,6 +25,12 @@ export class TavilyApi implements ICredentialType {
 				'Tavily API key. You can find your API key in your Tavily dashboard at https://app.tavily.com/home',
 			default: '',
 		},
+		{
+			displayName: 'Base URL',
+			name: 'baseUrl',
+			type: 'hidden',
+			default: 'https://api.tavily.com',
+		},
 	];
 
 	authenticate: IAuthenticateGeneric = {
@@ -40,7 +46,7 @@ export class TavilyApi implements ICredentialType {
 	// The usage endpoint checks the key without running a search, so testing uses no credits
 	test: ICredentialTestRequest = {
 		request: {
-			baseURL: 'https://api.tavily.com',
+			baseURL: '={{$credentials.baseUrl}}',
 			url: '/usage',
 			method: 'GET',
 		},

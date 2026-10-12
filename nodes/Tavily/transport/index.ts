@@ -24,13 +24,16 @@ export async function tavilyApiRequest(
 	uri?: string,
 	headers: IDataObject = {},
 ): Promise<IDataObject> {
+	const credentials = await this.getCredentials<{ baseUrl?: string }>('tavilyApi');
+	const baseUrl = (credentials.baseUrl || TAVILY_API_URL).replace(/\/+$/, '');
+
 	const options: IHttpRequestOptions = {
 		headers: {
 			'Content-Type': 'application/json',
 			...headers,
 		},
 		method,
-		url: uri || `${TAVILY_API_URL}${resource}`,
+		url: uri || `${baseUrl}${resource}`,
 		json: true,
 		returnFullResponse: true,
 		ignoreHttpStatusErrors: true,
