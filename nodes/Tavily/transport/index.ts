@@ -127,7 +127,10 @@ function getErrorDetail(body: JsonObject): string | undefined {
 	const detail = body.detail as JsonObject | string | undefined;
 	if (typeof detail === 'string') return detail;
 	if (detail && typeof detail.error === 'string') return detail.error;
-	if (typeof body.error === 'string') return body.error;
+	const error = body.error as JsonObject | string | undefined;
+	if (typeof error === 'string') return error;
+	// OpenAI-style `{ "error": { "message": "..." } }`, e.g. from a proxy such as n8n Connect
+	if (error && typeof error.message === 'string') return error.message;
 	if (typeof body.message === 'string') return body.message;
 	return undefined;
 }
