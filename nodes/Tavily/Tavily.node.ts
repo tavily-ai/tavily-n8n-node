@@ -19,8 +19,9 @@ export class Tavily implements INodeType {
 		name: 'tavily',
 		group: ['transform'],
 		icon: { light: 'file:tavily.svg', dark: 'file:tavily.dark.svg' },
-		version: [1, 2],
-		defaultVersion: 2,
+		// 2.1: requests go to the credential's base URL instead of a hardcoded host
+		version: [1, 2, 2.1],
+		defaultVersion: 2.1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
 		description:
 			'Search the web, extract page content, crawl and map websites, and run in-depth research with Tavily',
