@@ -46,7 +46,7 @@ export class TavilyApi implements ICredentialType {
 	// The usage endpoint checks the key without running a search, so testing uses no credits
 	test: ICredentialTestRequest = {
 		request: {
-			baseURL: '={{$credentials.baseUrl}}',
+			baseURL: '={{$credentials.baseUrl || "https://api.tavily.com"}}',
 			url: '/usage',
 			method: 'GET',
 		},
