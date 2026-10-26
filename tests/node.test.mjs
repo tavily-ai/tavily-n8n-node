@@ -130,6 +130,11 @@ test('research files: forwarded as base64 entries and validated before any reque
 		'unsupported extension': [{ name: 'a.pdf', data: b64('x') }],
 		'wrong type': [{ name: 'a.txt', data: b64('x'), type: 'hex' }],
 		'invalid base64': [{ name: 'a.txt', data: '***not base64***' }],
+		'padding only (=)': [{ name: 'a.txt', data: '=' }],
+		'padding only (==)': [{ name: 'a.txt', data: '==' }],
+		'impossible length (A)': [{ name: 'a.txt', data: 'A' }],
+		'non-canonical padding bits': [{ name: 'a.txt', data: 'QR==' }],
+		'padding in the middle': [{ name: 'a.txt', data: 'QUJD=QUJD' }],
 		'too many words in one file': [{ name: 'a.txt', data: b64('w '.repeat(80001)) }],
 		'too many words combined': [{ name: 'a.txt', data: b64('w '.repeat(50000)) }, { name: 'b.txt', data: b64('w '.repeat(50000)) }],
 	};
@@ -138,6 +143,11 @@ test('research files: forwarded as base64 entries and validated before any reque
 		await assert.rejects(() => research.execute.call(ctx, 0), /Files/, label);
 		assert.equal(ctx.requests.length, 0, `${label}: no request must be made`);
 	}
+	// whitespace policy: line breaks inside otherwise valid base64 stay accepted
+	const wrapped = b64('hello wrapped world').replace(/(.{8})/g, '$1\n');
+	const wrappedCtx = context({ input: 'q', options: { files: { file: [{ name: 'a.txt', data: wrapped }] } } });
+	await research.execute.call(wrappedCtx, 0);
+	assert.equal(wrappedCtx.requests.length, 1);
 	assert.ok(names(researchOptions).includes('files'));
 	assert.match(researchOptions.find((o) => o.name === 'files').description, /80,000 words/);
 });

@@ -8,7 +8,13 @@ import { cleanListFields, DOMAIN_SEPARATOR } from '../lists';
 const MAX_FILES = 5;
 const MAX_WORDS = 80000;
 const FILE_EXTENSIONS = ['.txt', '.md', '.json'];
-const BASE64 = /^[A-Za-z0-9+/\s]*={0,2}\s*$/;
+const BASE64 = /^[A-Za-z0-9+/]*={0,2}$/;
+
+/** Whitespace is allowed (it is ignored); the rest must be canonical padded base64, so Buffer cannot silently decode junk. */
+function isCanonicalBase64(data: string): boolean {
+	const compact = data.replace(/\s+/g, '');
+	return compact.length > 0 && compact.length % 4 === 0 && BASE64.test(compact) && Buffer.from(compact, 'base64').toString('base64') === compact;
+}
 
 type FileEntry = { name?: unknown; data?: unknown; type?: unknown };
 
@@ -32,7 +38,7 @@ function buildFiles(this: IExecuteFunctions, raw: unknown, index: number): IData
 		if (!FILE_EXTENSIONS.some((extension) => name.toLowerCase().endsWith(extension))) {
 			fail(`${label} (${name}): supported file types are ${FILE_EXTENSIONS.join(', ')}.`);
 		}
-		if (!BASE64.test(data)) fail(`${label} (${name}): data is not valid base64.`);
+		if (!isCanonicalBase64(data)) fail(`${label} (${name}): data is not valid base64.`);
 		const words = Buffer.from(data, 'base64').toString('utf8').split(/\s+/).filter(Boolean).length;
 		if (words > MAX_WORDS) fail(`${label} (${name}): ${words} words exceeds the ${MAX_WORDS} word limit per file.`);
 		totalWords += words;
