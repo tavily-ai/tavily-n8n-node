@@ -10,7 +10,7 @@ const search = require('../dist/nodes/Tavily/actions/search/query.operation.js')
 const extract = require('../dist/nodes/Tavily/actions/extract/urls.operation.js');
 const crawl = require('../dist/nodes/Tavily/actions/crawl/url.operation.js');
 const research = require('../dist/nodes/Tavily/actions/research/create.operation.js');
-const { queryOptions, extractOptions, crawlOptions, researchOptions } = require('../dist/nodes/Tavily/descriptions/common.descriptions.js');
+const { queryOptions, extractOptions, crawlOptions, mapOptions, researchOptions } = require('../dist/nodes/Tavily/descriptions/common.descriptions.js');
 
 function context(params) {
 	const requests = [];
@@ -94,4 +94,20 @@ test('research sends cleaned domain lists and output_length', async () => {
 	assert.deepEqual(body.include_domains, ['sec.gov', 'example.com']);
 	assert.deepEqual(body.exclude_domains, ['medium.com']);
 	assert.equal(body.output_length, 'short');
+});
+
+test('crawl allow_external defaults to true like the API and is only sent when set', async () => {
+	const option = crawlOptions.find((o) => o.name === 'allow_external');
+	assert.equal(option.default, true);
+	assert.match(option.description, /include external domain links/i);
+	const mapOption = mapOptions.find((o) => o.name === 'allow_external');
+	assert.equal(mapOption.default, option.default);
+	const omitted = context({ url: 'https://example.com', options: {} });
+	await crawl.execute.call(omitted, 0);
+	assert.ok(!('allow_external' in omitted.requests[0].body), 'unset option is not sent, so the API default (true) applies');
+	for (const value of [true, false]) {
+		const c = context({ url: 'https://example.com', options: { allow_external: value } });
+		await crawl.execute.call(c, 0);
+		assert.equal(c.requests[0].body.allow_external, value);
+	}
 });

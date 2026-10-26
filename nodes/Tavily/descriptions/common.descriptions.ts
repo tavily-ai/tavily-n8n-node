@@ -413,8 +413,8 @@ export const crawlOptions: INodeProperties[] = [
 		displayName: 'Allow External',
 		name: 'allow_external',
 		type: 'boolean',
-		default: false,
-		description: 'Whether to allow following links that go to external domains',
+		default: true,
+		description: 'Whether to include external domain links in the final results list',
 	},
 	{
 		displayName: 'Chunks Per Source',
