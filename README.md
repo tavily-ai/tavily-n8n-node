@@ -102,7 +102,11 @@ Tavily Research performs comprehensive research on a given topic by conducting m
 5. In the node's settings:
    - Select your Tavily API credential
    - Enter the `request_id` from the create research task response
-6. Run the workflow to get the research status and results
+6. Run the workflow to get the research status and results. Enable **Include Usage** if you need credit metadata.
+
+Create returns a `request_id`; it does not wait for the report. Connect a **Wait** node and **Get Research Status**, then inspect `status`. Repeat with a bounded workflow timeout while it is `pending` or `in_progress`; consume `content` and `sources` only when it is `completed`. Handle `failed` separately. The complete API response is preserved, including structured content and sources.
+
+This JSON node uses task submission and status checks instead of SSE streaming. Existing workflows that set `Stream: true` must disable that option and use this task flow; they receive a clear error before a task is started. Streaming chunks are never presented as a completed report.
 
 ## Use with AI Agents
 
@@ -114,7 +118,7 @@ Tavily can be attached to an n8n **AI Agent** as a tool, so the agent decides wh
 4. Select your Tavily API credential
 5. Click **Open chat** and ask a question that needs current information
 
-With the Tavily Tool (node version 2 and later), Search and Extract are ready for agents without extra setup.
+With the Tavily Tool (node version 2 and later), the primary input for Search, Extract, Map, Crawl, Create Research Task, and Get Research Status is model-defined by default. Choose a resource and operation when connecting a tool; add separate Create and Status tools for Research. Options remain configurable by the workflow author and can use n8n expressions where appropriate.
 
 **Search**
 
@@ -231,7 +235,9 @@ An example workflow with Search and Extract tools is in [`examples/ai-agent-sear
 | Model | The model used by the research agent (Auto, Mini, or Pro). Mini is optimized for targeted research, Pro provides comprehensive multi-angle research |
 | Citation Format | The format for citations in the research report (Numbered, MLA, APA, or Chicago) |
 | Output Schema | A JSON Schema object that defines the structure of the research output |
-| Stream | Whether to stream research results in real-time as Server-Sent Events (SSE) with progress updates and incremental results |
+| Files | Up to five base64-encoded `.txt`, `.md`, or `.json` attachments, at most 80,000 words combined |
+| Include / Exclude Domains | Sources to include or exclude from the research |
+| Output Length | Short, Standard, or Long target report length |
 
 #### Get Research Status
 

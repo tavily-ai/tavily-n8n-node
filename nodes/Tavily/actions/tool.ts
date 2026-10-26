@@ -21,6 +21,26 @@ export const fromAI = (key: string, description: string) =>
 /** Dropdown value meaning "the model picks this value on each call" */
 export const MODEL_CHOICE = 'model';
 
+/** Keep ordinary workflow inputs fixed; expose the primary input to AI tools by default. */
+export function primaryInputFields(
+	field: INodeProperties,
+	show: IDataObject,
+	modelDescription: string,
+): INodeProperties[] {
+	return [
+		{ ...field, displayOptions: { show: { ...show, '@version': [1] } } },
+		{
+			...field,
+			displayOptions: { show: { ...show, '@version': [{ _cnd: { gte: 2 } }], '@tool': [false] } },
+		},
+		{
+			...field,
+			default: fromAI(field.name, modelDescription),
+			displayOptions: { show: { ...show, ...TOOL_V2 } },
+		},
+	];
+}
+
 export function isToolV2(this: IExecuteFunctions): boolean {
 	const node = this.getNode();
 	return node.typeVersion >= 2 && node.type.endsWith('Tool');

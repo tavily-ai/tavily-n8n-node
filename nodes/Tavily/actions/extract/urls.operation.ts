@@ -92,6 +92,10 @@ export async function execute(this: IExecuteFunctions, index: number) {
 		});
 	}
 
+	if (urls.length > 20) {
+		throw new NodeOperationError(this.getNode(), 'Extract supports at most 20 URLs per request', { itemIndex: index });
+	}
+
 	const body: IDataObject = {
 		'urls': urls,
 		...options,

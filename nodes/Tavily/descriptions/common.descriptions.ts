@@ -191,6 +191,7 @@ export const queryOptions: INodeProperties[] = [
 		default: 'basic',
 		description: 'Include an LLM-generated answer to the provided query',
 		options: [
+			{ name: 'None', value: false, description: 'Do not generate an answer' },
 			{
 				name: 'Basic',
 				value: 'basic',
@@ -269,9 +270,14 @@ export const queryOptions: INodeProperties[] = [
 	{
 		displayName: 'Include Raw Content',
 		name: 'include_raw_content',
-		type: 'boolean',
+		type: 'options',
 		default: false,
-		description: 'Whether to include the cleaned and parsed HTML content of each search result',
+		options: [
+			{ name: 'None', value: false },
+			{ name: 'Markdown', value: 'markdown' },
+			{ name: 'Text', value: 'text' },
+		],
+		description: 'Include cleaned page content as Markdown or plain text',
 	},
 	includeUsage,
 	{
@@ -289,7 +295,7 @@ export const queryOptions: INodeProperties[] = [
 		default: 5,
 		description: 'The maximum number of search results to return',
 		typeOptions: {
-			minValue: 1,
+			minValue: 0,
 			maxValue: 20,
 		},
 	},
@@ -487,7 +493,7 @@ export const crawlOptions: INodeProperties[] = [
 		type: 'number',
 		default: 20,
 		description: 'Max number of links to follow per level',
-		typeOptions: { minValue: 1 },
+		typeOptions: { minValue: 1, maxValue: 500 },
 	},
 	{
 		displayName: 'Max Depth',
@@ -495,7 +501,7 @@ export const crawlOptions: INodeProperties[] = [
 		type: 'number',
 		default: 1,
 		description: 'Max depth of the crawl',
-		typeOptions: { minValue: 1 },
+		typeOptions: { minValue: 1, maxValue: 5 },
 	},
 	{
 		displayName: 'Select Domains',
@@ -655,14 +661,6 @@ export const researchOptions: INodeProperties[] = [
 		placeholder:
 			'{"properties": {"company": {"type": "string", "description": "Company name"}}, "required": ["company"]}',
 	},
-	{
-		displayName: 'Stream',
-		name: 'stream',
-		type: 'boolean',
-		default: false,
-		description:
-			'Whether to stream the research results as they are generated. When enabled, returns Server-Sent Events (SSE) with real-time progress updates, tool calls, and incremental results.',
-	},
 ];
 
 export const mapOptions: INodeProperties[] = [
@@ -695,7 +693,7 @@ export const mapOptions: INodeProperties[] = [
 		type: 'number',
 		default: 20,
 		description: 'Maximum number of links to follow per level of the tree (i.e., per page)',
-		typeOptions: { minValue: 1 },
+		typeOptions: { minValue: 1, maxValue: 500 },
 	},
 	{
 		displayName: 'Max Depth',
@@ -703,7 +701,7 @@ export const mapOptions: INodeProperties[] = [
 		type: 'number',
 		default: 1,
 		description: 'Defines how far from the base URL the crawler can explore',
-		typeOptions: { minValue: 1 },
+		typeOptions: { minValue: 1, maxValue: 5 },
 	},
 	{
 		displayName: 'Select Domains',

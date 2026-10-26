@@ -1,9 +1,11 @@
+import { primaryInputFields } from '../tool';
+import { NodeOperationError } from 'n8n-workflow';
 import type { IExecuteFunctions, INodeProperties } from 'n8n-workflow';
 import { tavilyApiRequest } from '../../transport';
 import { updateDisplayOptions } from '../../display';
 
 export const properties: INodeProperties[] = [
-	{
+	...primaryInputFields({
 		displayName: 'Request ID',
 		name: 'requestId',
 		description: 'The unique identifier of the research task',
@@ -16,7 +18,8 @@ export const properties: INodeProperties[] = [
 				resource: ['research'],
 			},
 		},
-	},
+	}, { resource: ['research'], operation: ['status'] }, 'The request_id returned by Create Research Task. Check until completed or failed; pending is not a finished report.'),
+	{ displayName: 'Include Usage', name: 'includeUsage', type: 'boolean', default: false, description: 'Whether to include credit usage in the task result' },
 ];
 
 const displayOptions = {
@@ -29,11 +32,13 @@ const displayOptions = {
 export const description = updateDisplayOptions(displayOptions, properties);
 
 export async function execute(this: IExecuteFunctions, index: number) {
-	const requestId = this.getNodeParameter('requestId', index) as string;
+	const requestId = String(this.getNodeParameter('requestId', index) ?? '').trim();
+	if (!requestId) throw new NodeOperationError(this.getNode(), 'Request ID is required', { itemIndex: index });
+	const includeUsage = this.getNodeParameter('includeUsage', index, false) as boolean;
 
-	const endpoint = `/research/${requestId}`;
+	const endpoint = `/research/${encodeURIComponent(requestId)}`;
 
-	const responseData = await tavilyApiRequest.call(this, 'GET', endpoint);
+	const responseData = await tavilyApiRequest.call(this, 'GET', endpoint, {}, { include_usage: includeUsage });
 
 	return this.helpers.constructExecutionMetaData(
 		this.helpers.returnJsonArray(responseData),

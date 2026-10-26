@@ -9,7 +9,8 @@ export function updateDisplayOptions(
 			...nodeProperty,
 			displayOptions: {
 				...nodeProperty.displayOptions,
-				...displayOptions
+				...displayOptions,
+				show: { ...nodeProperty.displayOptions?.show, ...displayOptions.show },
 			},
 		};
 	});

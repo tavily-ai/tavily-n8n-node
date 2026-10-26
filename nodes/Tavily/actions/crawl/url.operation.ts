@@ -1,3 +1,4 @@
+import { primaryInputFields } from '../tool';
 import type { IDataObject, IExecuteFunctions, INodeProperties } from 'n8n-workflow';
 import { tavilyApiRequest } from '../../transport';
 import { cleanListFields, PATTERN_SEPARATOR } from '../lists';
@@ -5,7 +6,7 @@ import { updateDisplayOptions } from '../../display';
 import { crawlOptions } from '../../descriptions/common.descriptions';
 
 export const properties: INodeProperties[] = [
-  {
+  ...primaryInputFields({
     displayName: 'URL',
     name: 'url',
     description: 'The root URL to begin the crawl',
@@ -18,7 +19,7 @@ export const properties: INodeProperties[] = [
         resource: ['crawl'],
       },
     },
-  },
+  }, { resource: ['crawl'], operation: ['url'] }, 'The full website URL to crawl and extract page content.'),
   {
     displayName: 'Options',
     name: 'options',
