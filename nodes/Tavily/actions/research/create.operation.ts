@@ -5,6 +5,43 @@ import { updateDisplayOptions } from '../../display';
 import { researchOptions } from '../../descriptions';
 import { cleanListFields, DOMAIN_SEPARATOR } from '../lists';
 
+const MAX_FILES = 5;
+const MAX_WORDS = 80000;
+const FILE_EXTENSIONS = ['.txt', '.md', '.json'];
+const BASE64 = /^[A-Za-z0-9+/\s]*={0,2}\s*$/;
+
+type FileEntry = { name?: unknown; data?: unknown; type?: unknown };
+
+/** Convert the Files fixedCollection into the API's `files` array, validating it before any request. */
+function buildFiles(this: IExecuteFunctions, raw: unknown, index: number): IDataObject[] | undefined {
+	const entries = (raw as { file?: FileEntry[] } | undefined)?.file ?? (Array.isArray(raw) ? (raw as FileEntry[]) : []);
+	if (!entries.length) return undefined;
+	const fail = (message: string): never => {
+		throw new NodeOperationError(this.getNode(), message, { itemIndex: index });
+	};
+	if (entries.length > MAX_FILES) fail(`Files: at most ${MAX_FILES} files can be attached, got ${entries.length}.`);
+	let totalWords = 0;
+	const files = entries.map((entry, position) => {
+		const label = `Files entry ${position + 1}`;
+		const name = typeof entry.name === 'string' ? entry.name.trim() : '';
+		const data = typeof entry.data === 'string' ? entry.data.trim() : '';
+		const type = entry.type === undefined || entry.type === '' ? 'base64' : entry.type;
+		if (!name) fail(`${label}: a file name is required.`);
+		if (!data) fail(`${label} (${name}): base64 data is required.`);
+		if (type !== 'base64') fail(`${label} (${name}): type must be base64.`);
+		if (!FILE_EXTENSIONS.some((extension) => name.toLowerCase().endsWith(extension))) {
+			fail(`${label} (${name}): supported file types are ${FILE_EXTENSIONS.join(', ')}.`);
+		}
+		if (!BASE64.test(data)) fail(`${label} (${name}): data is not valid base64.`);
+		const words = Buffer.from(data, 'base64').toString('utf8').split(/\s+/).filter(Boolean).length;
+		if (words > MAX_WORDS) fail(`${label} (${name}): ${words} words exceeds the ${MAX_WORDS} word limit per file.`);
+		totalWords += words;
+		return { name, data, type: 'base64' } as IDataObject;
+	});
+	if (totalWords > MAX_WORDS) fail(`Files: ${totalWords} words in total exceeds the ${MAX_WORDS} word limit across all files.`);
+	return files;
+}
+
 export const properties: INodeProperties[] = [
 	{
 		displayName: 'Input',
@@ -61,6 +98,12 @@ export async function execute(this: IExecuteFunctions, index: number) {
 	}
 
 	cleanListFields(body, ['include_domains', 'exclude_domains'], DOMAIN_SEPARATOR);
+
+	if ('files' in body) {
+		const files = buildFiles.call(this, body.files, index);
+		if (files) body.files = files;
+		else delete body.files;
+	}
 
 	const endpoint = '/research';
 

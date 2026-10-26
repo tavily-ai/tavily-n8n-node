@@ -111,3 +111,33 @@ test('crawl allow_external defaults to true like the API and is only sent when s
 		assert.equal(c.requests[0].body.allow_external, value);
 	}
 });
+
+test('research files: forwarded as base64 entries and validated before any request', async () => {
+	const b64 = (text) => Buffer.from(text).toString('base64');
+	const ok = context({ input: 'q', options: { files: { file: [{ name: 'a.md', data: b64('hello world') }, { name: 'b.JSON', data: b64('{"a":1}') }] } } });
+	await research.execute.call(ok, 0);
+	assert.deepEqual(ok.requests[0].body.files, [
+		{ name: 'a.md', data: b64('hello world'), type: 'base64' },
+		{ name: 'b.JSON', data: b64('{"a":1}'), type: 'base64' },
+	]);
+	const none = context({ input: 'q', options: { files: {} } });
+	await research.execute.call(none, 0);
+	assert.ok(!('files' in none.requests[0].body));
+	const cases = {
+		'more than 5 files': Array.from({ length: 6 }, (_, i) => ({ name: `f${i}.txt`, data: b64('x') })),
+		'missing name': [{ name: '', data: b64('x') }],
+		'missing data': [{ name: 'a.txt', data: '' }],
+		'unsupported extension': [{ name: 'a.pdf', data: b64('x') }],
+		'wrong type': [{ name: 'a.txt', data: b64('x'), type: 'hex' }],
+		'invalid base64': [{ name: 'a.txt', data: '***not base64***' }],
+		'too many words in one file': [{ name: 'a.txt', data: b64('w '.repeat(80001)) }],
+		'too many words combined': [{ name: 'a.txt', data: b64('w '.repeat(50000)) }, { name: 'b.txt', data: b64('w '.repeat(50000)) }],
+	};
+	for (const [label, file] of Object.entries(cases)) {
+		const ctx = context({ input: 'q', options: { files: { file } } });
+		await assert.rejects(() => research.execute.call(ctx, 0), /Files/, label);
+		assert.equal(ctx.requests.length, 0, `${label}: no request must be made`);
+	}
+	assert.ok(names(researchOptions).includes('files'));
+	assert.match(researchOptions.find((o) => o.name === 'files').description, /80,000 words/);
+});

@@ -563,6 +563,41 @@ export const researchOptions: INodeProperties[] = [
 		placeholder: 'example.com',
 	},
 	{
+		displayName: 'Files',
+		name: 'files',
+		type: 'fixedCollection',
+		typeOptions: { multipleValues: true, maxValue: 5 },
+		default: {},
+		placeholder: 'Add file',
+		description:
+			'Files the research agent uses as sources alongside the web: up to 5 text, Markdown or JSON files, at most 80,000 words per file and 80,000 words combined (enforced by the API). Provide the contents base64-encoded, for example from a previous node.',
+		options: [
+			{
+				displayName: 'File',
+				name: 'file',
+				values: [
+					{
+						displayName: 'Data (Base64)',
+						name: 'data',
+						type: 'string',
+						default: '',
+						required: true,
+						description: 'The base64-encoded file contents',
+					},
+					{
+						displayName: 'Name',
+						name: 'name',
+						type: 'string',
+						default: '',
+						required: true,
+						placeholder: 'report.md',
+						description: 'The file name including its extension (text, Markdown or JSON files only)',
+					},
+				],
+			},
+		],
+	},
+	{
 		displayName: 'Include Domains',
 		name: 'include_domains',
 		type: 'string',
