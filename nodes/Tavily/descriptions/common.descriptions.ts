@@ -84,6 +84,18 @@ export const extractOptions: INodeProperties[] = [
 		description:
 			'A natural language query describing the information you want to extract from the provided URLs. Enables Chunks Per Source.',
 	},
+	{
+		displayName: 'Timeout',
+		name: 'timeout',
+		type: 'number',
+		default: 10,
+		description:
+			'Maximum time in seconds to wait for the extraction (1-60). If not set, Tavily waits 10 seconds for basic extraction and 30 seconds for advanced extraction.',
+		typeOptions: {
+			minValue: 1,
+			maxValue: 60,
+		},
+	},
 ];
 
 export const queryOptions: INodeProperties[] = [
@@ -153,6 +165,26 @@ export const queryOptions: INodeProperties[] = [
 		placeholder: 'example.com',
 	},
 	{
+		displayName: 'Filter By Language',
+		name: 'filter_by_language',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to return only results in the selected language. Requires Language.',
+		displayOptions: {
+			show: {
+				language: [{ _cnd: { exists: true } }],
+			},
+		},
+	},
+	{
+		displayName: 'Filter By Published Date',
+		name: 'filter_by_published_date',
+		type: 'boolean',
+		default: false,
+		description:
+			'Whether to remove results whose published date falls outside the time range or start and end dates, including results with no detectable date. Also turns on Include Published Date.',
+	},
+	{
 		displayName: 'Include Answer',
 		name: 'include_answer',
 		type: 'options',
@@ -182,6 +214,30 @@ export const queryOptions: INodeProperties[] = [
 		description: 'A list of domains to specifically include in the search results',
 		placeholder: 'example.com',
 	},
+	{
+		displayName: 'Include Domains Mode',
+		name: 'include_domains_mode',
+		type: 'options',
+		default: 'prefer',
+		options: [
+			{
+				name: 'Prefer',
+				value: 'prefer',
+				description: 'Boost results from the included domains but allow others',
+			},
+			{
+				name: 'Restrict',
+				value: 'restrict',
+				description: 'Return only results from the included domains and their subdomains',
+			},
+		],
+		description: 'Whether Include Domains boosts or restricts the results. Requires Include Domains.',
+		displayOptions: {
+			show: {
+				include_domains: [{ _cnd: { exists: true } }],
+			},
+		},
+	},
 	includeFavicon,
 	{
 		displayName: 'Include Image Descriptions',
@@ -203,6 +259,14 @@ export const queryOptions: INodeProperties[] = [
 		description: 'Whether to perform an image search and include the results in the response',
 	},
 	{
+		displayName: 'Include Published Date',
+		name: 'include_published_date',
+		type: 'boolean',
+		default: false,
+		description:
+			'Whether to include a published_date field for each result (beta). The value is null when no date can be detected. Always on for the news topic.',
+	},
+	{
 		displayName: 'Include Raw Content',
 		name: 'include_raw_content',
 		type: 'boolean',
@@ -210,6 +274,14 @@ export const queryOptions: INodeProperties[] = [
 		description: 'Whether to include the cleaned and parsed HTML content of each search result',
 	},
 	includeUsage,
+	{
+		displayName: 'Language',
+		name: 'language',
+		type: 'string',
+		default: '',
+		description: 'Boost results written in this language, for example english',
+		placeholder: 'e.g. english',
+	},
 	{
 		displayName: 'Max Results',
 		name: 'max_results',
@@ -219,6 +291,18 @@ export const queryOptions: INodeProperties[] = [
 		typeOptions: {
 			minValue: 1,
 			maxValue: 20,
+		},
+	},
+	{
+		displayName: 'Safe Search',
+		name: 'safe_search',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to filter out unsafe content. Not available with the Fast and Ultra-Fast search depths.',
+		displayOptions: {
+			hide: {
+				search_depth: ['fast', 'ultra-fast'],
+			},
 		},
 	},
 	{
@@ -429,6 +513,17 @@ export const crawlOptions: INodeProperties[] = [
 		default: [],
 		description: 'Regex patterns to select only URLs with specific path patterns (e.g., "/docs/.*")',
 	},
+	{
+		displayName: 'Timeout',
+		name: 'timeout',
+		type: 'number',
+		default: 150,
+		description: 'Maximum time in seconds to wait for the crawl operation before timing out (10-150)',
+		typeOptions: {
+			minValue: 10,
+			maxValue: 150,
+		},
+	},
 ];
 
 export const researchOptions: INodeProperties[] = [
@@ -458,6 +553,26 @@ export const researchOptions: INodeProperties[] = [
 		description: 'The format for citations in the research report',
 	},
 	{
+		displayName: 'Exclude Domains',
+		name: 'exclude_domains',
+		type: 'string',
+		typeOptions: { multipleValues: true },
+		default: [],
+		description:
+			'Domains that must not appear as sources, up to 20 entries. Blocking a domain also blocks its subdomains.',
+		placeholder: 'example.com',
+	},
+	{
+		displayName: 'Include Domains',
+		name: 'include_domains',
+		type: 'string',
+		typeOptions: { multipleValues: true },
+		default: [],
+		description:
+			'Domains the research agent should prioritize as sources, up to 20 entries. This is a soft preference: other domains can still appear in the report.',
+		placeholder: 'example.com',
+	},
+	{
 		displayName: 'Model',
 		name: 'model',
 		type: 'options',
@@ -482,6 +597,18 @@ export const researchOptions: INodeProperties[] = [
 			},
 		],
 		description: 'The model used by the research agent',
+	},
+	{
+		displayName: 'Output Length',
+		name: 'output_length',
+		type: 'options',
+		default: 'standard',
+		options: [
+			{ name: 'Long', value: 'long' },
+			{ name: 'Short', value: 'short' },
+			{ name: 'Standard', value: 'standard' },
+		],
+		description: 'Target size of the research report. Lengths are targets, not hard caps.',
 	},
 	{
 		displayName: 'Output Schema',

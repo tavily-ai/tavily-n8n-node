@@ -3,6 +3,7 @@ import { NodeOperationError } from 'n8n-workflow';
 import { tavilyApiRequest } from '../../transport';
 import { updateDisplayOptions } from '../../display';
 import { researchOptions } from '../../descriptions';
+import { cleanListFields, DOMAIN_SEPARATOR } from '../lists';
 
 export const properties: INodeProperties[] = [
 	{
@@ -58,6 +59,8 @@ export async function execute(this: IExecuteFunctions, index: number) {
 			});
 		}
 	}
+
+	cleanListFields(body, ['include_domains', 'exclude_domains'], DOMAIN_SEPARATOR);
 
 	const endpoint = '/research';
 
