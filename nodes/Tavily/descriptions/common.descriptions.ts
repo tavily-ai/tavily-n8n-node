@@ -182,7 +182,7 @@ export const queryOptions: INodeProperties[] = [
 		type: 'boolean',
 		default: false,
 		description:
-			'Whether to remove results whose published date falls outside the time range or start and end dates, including results with no detectable date. Also turns on Include Published Date.',
+			'Whether to filter by best-estimate published or last-updated date (beta). With an active time range or start/end date window, removes undated and out-of-window results. Also turns on Include Published Date.',
 	},
 	{
 		displayName: 'Include Answer',
@@ -265,7 +265,7 @@ export const queryOptions: INodeProperties[] = [
 		type: 'boolean',
 		default: false,
 		description:
-			'Whether to include a published_date field for each result (beta). The value is null when no date can be detected. Always on for the news topic.',
+			'Whether to include a best-estimate published or last-updated date for each result (beta). It can be later than original publication and is null when undetected. Always on for the news topic.',
 	},
 	{
 		displayName: 'Include Raw Content',
@@ -274,6 +274,7 @@ export const queryOptions: INodeProperties[] = [
 		default: false,
 		options: [
 			{ name: 'None', value: false },
+			{ name: 'Enabled (Default Format)', value: true },
 			{ name: 'Markdown', value: 'markdown' },
 			{ name: 'Text', value: 'text' },
 		],
@@ -295,7 +296,7 @@ export const queryOptions: INodeProperties[] = [
 		default: 5,
 		description: 'The maximum number of search results to return',
 		typeOptions: {
-			minValue: 0,
+			minValue: 1,
 			maxValue: 20,
 		},
 	},
@@ -559,61 +560,6 @@ export const researchOptions: INodeProperties[] = [
 		description: 'The format for citations in the research report',
 	},
 	{
-		displayName: 'Exclude Domains',
-		name: 'exclude_domains',
-		type: 'string',
-		typeOptions: { multipleValues: true },
-		default: [],
-		description:
-			'Domains that must not appear as sources, up to 20 entries. Blocking a domain also blocks its subdomains.',
-		placeholder: 'example.com',
-	},
-	{
-		displayName: 'Files',
-		name: 'files',
-		type: 'fixedCollection',
-		typeOptions: { multipleValues: true, maxValue: 5 },
-		default: {},
-		placeholder: 'Add file',
-		description:
-			'Files the research agent uses as sources alongside the web: up to 5 text, Markdown or JSON files, at most 80,000 words per file and 80,000 words combined (enforced by the API). Provide the contents base64-encoded, for example from a previous node.',
-		options: [
-			{
-				displayName: 'File',
-				name: 'file',
-				values: [
-					{
-						displayName: 'Data (Base64)',
-						name: 'data',
-						type: 'string',
-						default: '',
-						required: true,
-						description: 'The base64-encoded file contents',
-					},
-					{
-						displayName: 'Name',
-						name: 'name',
-						type: 'string',
-						default: '',
-						required: true,
-						placeholder: 'report.md',
-						description: 'The file name including its extension (text, Markdown or JSON files only)',
-					},
-				],
-			},
-		],
-	},
-	{
-		displayName: 'Include Domains',
-		name: 'include_domains',
-		type: 'string',
-		typeOptions: { multipleValues: true },
-		default: [],
-		description:
-			'Domains the research agent should prioritize as sources, up to 20 entries. This is a soft preference: other domains can still appear in the report.',
-		placeholder: 'example.com',
-	},
-	{
 		displayName: 'Model',
 		name: 'model',
 		type: 'options',
@@ -638,18 +584,6 @@ export const researchOptions: INodeProperties[] = [
 			},
 		],
 		description: 'The model used by the research agent',
-	},
-	{
-		displayName: 'Output Length',
-		name: 'output_length',
-		type: 'options',
-		default: 'standard',
-		options: [
-			{ name: 'Long', value: 'long' },
-			{ name: 'Short', value: 'short' },
-			{ name: 'Standard', value: 'standard' },
-		],
-		description: 'Target size of the research report. Lengths are targets, not hard caps.',
 	},
 	{
 		displayName: 'Output Schema',

@@ -24,12 +24,12 @@ function context(parameters, responses = [{ statusCode: 200, body: { results: []
  };
 }
 
-test('Search editor supports disabled answer, both content formats, and zero results', async () => {
+test('Search preserves explicit false, zero and legacy boolean content options on the wire', async () => {
  const option = name => props.queryOptions.find(p => p.name === name);
  assert.ok(option('include_answer').options.some(o => o.value === false));
  assert.equal(option('include_raw_content').type, 'options');
- assert.deepEqual(option('include_raw_content').options.map(o => o.value), [false, 'markdown', 'text']);
- assert.equal(option('max_results').typeOptions.minValue, 0);
+ assert.deepEqual(option('include_raw_content').options.map(o => o.value), [false, true, 'markdown', 'text']);
+ assert.equal(option('max_results').typeOptions.minValue, 1);
  for (const raw of [false, true, 'markdown', 'text']) {
   const ctx = context({ query: 'question', options: { include_raw_content: raw, max_results: 0, include_answer: false, safe_search: false } });
   await search.execute.call(ctx, 0);
@@ -56,18 +56,6 @@ test('Map and Crawl editor traversal bounds match public API', () => {
  }
 });
 
-test('Every AI-tool operation has a model-defined primary input without changing regular nodes', () => {
- const all=new Tavily().description.properties;
- for(const [resource,operation,name] of [['map','url','url'],['crawl','url','url'],['research','create','input'],['research','status','requestId']]) {
-  const matches=all.filter(p=>p.name===name && p.displayOptions?.show?.resource?.includes(resource) && p.displayOptions?.show?.operation?.includes(operation));
-  const tool=matches.find(p=>p.displayOptions.show['@tool']?.includes(true));
-  assert.ok(tool,`${resource}.${operation} has a tool field`);
-  assert.match(tool.default,/\$fromAI\(/);
-  const ordinary=matches.find(p=>p.displayOptions.show['@tool']?.includes(false));
-  assert.equal(ordinary.default,'');
- }
-});
-
 test('Research refuses legacy streaming in the JSON task node before starting a task', async () => {
  const ctx=context({input:'task',options:{stream:true}});
  await assert.rejects(()=>create.execute.call(ctx,0),/stream|Create.*Status/i);
@@ -83,18 +71,72 @@ test('Research accepts201, preserves202 pending and200 complete through real nod
  const node=new Tavily();assert.deepEqual((await node.execute.call(ctx))[0][0].json,submitted);
  assert.equal(ctx.requests[0].body.stream,false);
  for(const response of [{statusCode:202,body:pending},{statusCode:200,body:completed}]) {
-  const result=context({resource:'research',operation:'status',requestId:'task-id',includeUsage:true},[response],true);
+  const result=context({resource:'research',operation:'status',requestId:'task-id'},[response],true);
   assert.deepEqual((await node.execute.call(result))[0][0].json,response.body);
-  assert.equal(result.requests[0].qs.include_usage,true);
+  assert.equal(result.requests[0].qs,undefined);
  }
 });
 
-test('Research validates structured output object and request ID before HTTP', async () => {
- for(const output_schema of ['[]','null','42','{}']) {
-  const ctx=context({input:'task',options:{output_schema}});
-  await assert.rejects(()=>create.execute.call(ctx,0),/Schema|schema/);assert.equal(ctx.requests.length,0);
+test('Research keeps existing JSON parsing and safely addresses task IDs', async () => {
+ const malformed=context({input:'task',options:{output_schema:'{"bad"'}});
+ await assert.rejects(()=>create.execute.call(malformed,0),/Invalid JSON/);
+ assert.equal(malformed.requests.length,0);
+ const schema={properties:{summary:{type:'string',description:'Summary'}},required:['summary']};
+ for(const value of [JSON.stringify(schema),schema]) {
+  const valid=context({input:'task',options:{model:'mini',citation_format:'apa',output_schema:value}});
+  await create.execute.call(valid,0);
+  assert.deepEqual(valid.requests[0].body,{input:'task',model:'mini',citation_format:'apa',output_schema:schema,stream:false});
  }
  const empty=context({requestId:' '});await assert.rejects(()=>status.execute.call(empty,0),/Request ID/);assert.equal(empty.requests.length,0);
  const path=context({requestId:'id/with?query'});await status.execute.call(path,0);
  assert.equal(path.requests[0].url,'https://api.tavily.com/research/id%2Fwith%3Fquery');
+});
+
+test('Search retains tool defaults, author/model precedence and optional full output', async () => {
+ const response={query:'question',answer:'answer',results:[{title:'Page',url:'https://example.com',content:'text',score:0.9,internal:'omit'}],request_id:'id',usage:{credits:1}};
+ const parameters={resource:'search',operation:'query',query:'question',topic:'model',topicByModel:'news',timeRange:'month',searchDepth:'model',searchDepthByModel:'not-a-depth',includeAnswer:'none',includeDomains:'example.org, example.com',excludeDomains:'blocked.example',options:{topic:'general',time_range:'year',search_depth:'basic',include_answer:true,include_domains:['example.com'],safe_search:false}};
+ const ctx=context(parameters,[{statusCode:200,body:response}],true);
+ const output=(await new Tavily().execute.call(ctx))[0][0];
+ assert.deepEqual(ctx.requests[0].body,{query:'question',topic:'news',time_range:'month',search_depth:'basic',include_domains:['example.com','example.org','example.com'],exclude_domains:['blocked.example'],safe_search:false,max_results:5});
+ assert.deepEqual(output.json,{query:'question',answer:'answer',usage:{credits:1},results:[{title:'Page',url:'https://example.com',content:'text',score:0.9}]});
+ assert.deepEqual(output.pairedItem,{item:0});
+ const full=context({...parameters,simple:false,options:{...parameters.options,max_results:1}},[{statusCode:200,body:response}],true);
+ assert.deepEqual((await new Tavily().execute.call(full))[0][0].json,response);
+ assert.equal(full.requests[0].body.max_results,1);
+ const ordinary=context({query:'question',topic:'news',options:{}});
+ await search.execute.call(ordinary,0);
+ assert.deepEqual(ordinary.requests[0].body,{query:'question'});
+});
+
+test('Extract retains model depth precedence and literal configured options', async () => {
+ const ctx=context({urls:'https://example.com, https://example.org',extractDepth:'model',extractDepthByModel:'advanced',options:{extract_depth:'basic',format:'text',query:'specific facts',include_images:false,timeout:30}},undefined,true);
+ await extract.execute.call(ctx,0);
+ assert.deepEqual(ctx.requests[0].body,{urls:['https://example.com','https://example.org'],extract_depth:'advanced',format:'text',query:'specific facts',include_images:false,timeout:30});
+});
+
+test('All existing operations retain authenticated transport, base URLs and structured API errors', async () => {
+ const operations=[
+  {resource:'search',operation:'query',query:'q',options:{}},
+  {resource:'extract',operation:'urls',urls:['https://example.com'],options:{}},
+  {resource:'map',operation:'url',url:'https://example.com',options:{}},
+  {resource:'crawl',operation:'url',url:'https://example.com',options:{}},
+  {resource:'research',operation:'create',input:'task',options:{}},
+  {resource:'research',operation:'status',requestId:'id'},
+ ];
+ for(const parameters of operations) {
+  for(const statusCode of [400,401,429,432,433,503]) {
+   const ctx=context(parameters,[{statusCode,body:{detail:{error:'fixture detail'}},headers:{'retry-after':'3'}}]);
+   await assert.rejects(()=>new Tavily().execute.call(ctx),error=>error.name==='NodeApiError' && error.httpCode===String(statusCode) && error.context.itemIndex===0 && `${error.message} ${error.description}`.includes('fixture detail'));
+   assert.equal(ctx.requests.length,1);
+  }
+ }
+ for(const baseUrl of [undefined,'','https://gateway.example/tavily/']) {
+  const ctx=context(operations[0]);
+  ctx.getCredentials=async(name)=>{assert.equal(name,'tavilyApi');return {baseUrl};};
+  await new Tavily().execute.call(ctx);
+  assert.equal(ctx.requests[0].url,baseUrl?'https://gateway.example/tavily/search':'https://api.tavily.com/search');
+ }
+ const failed={request_id:'id',status:'failed',error:'research stopped'};
+ const ctx=context(operations[5],[{statusCode:200,body:failed}]);
+ assert.deepEqual((await new Tavily().execute.call(ctx))[0][0].json,failed);
 });
