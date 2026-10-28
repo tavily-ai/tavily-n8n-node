@@ -1,3 +1,4 @@
+import { NodeOperationError } from 'n8n-workflow';
 import type { IExecuteFunctions, INodeProperties } from 'n8n-workflow';
 import { tavilyApiRequest } from '../../transport';
 import { updateDisplayOptions } from '../../display';
@@ -29,9 +30,10 @@ const displayOptions = {
 export const description = updateDisplayOptions(displayOptions, properties);
 
 export async function execute(this: IExecuteFunctions, index: number) {
-	const requestId = this.getNodeParameter('requestId', index) as string;
+	const requestId = String(this.getNodeParameter('requestId', index) ?? '').trim();
+	if (!requestId) throw new NodeOperationError(this.getNode(), 'Request ID is required', { itemIndex: index });
 
-	const endpoint = `/research/${requestId}`;
+	const endpoint = `/research/${encodeURIComponent(requestId)}`;
 
 	const responseData = await tavilyApiRequest.call(this, 'GET', endpoint);
 

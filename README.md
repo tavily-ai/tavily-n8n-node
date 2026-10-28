@@ -104,6 +104,10 @@ Tavily Research performs comprehensive research on a given topic by conducting m
    - Enter the `request_id` from the create research task response
 6. Run the workflow to get the research status and results
 
+Create returns a `request_id`; it does not wait for the report. Connect a **Wait** node and **Get Research Status**, then inspect `status`. Repeat with a bounded workflow timeout while it is `pending` or `in_progress`; consume `content` and `sources` only when it is `completed`. Handle `failed` separately. The complete API response is preserved.
+
+This JSON node does not consume SSE streams. Existing workflows that set `Stream: true` must disable that option and use the task/status flow; they receive a clear error before a task is started.
+
 ## Use with AI Agents
 
 Tavily can be attached to an n8n **AI Agent** as a tool, so the agent decides when to search the web and writes its own queries.
@@ -231,7 +235,6 @@ An example workflow with Search and Extract tools is in [`examples/ai-agent-sear
 | Model | The model used by the research agent (Auto, Mini, or Pro). Mini is optimized for targeted research, Pro provides comprehensive multi-angle research |
 | Citation Format | The format for citations in the research report (Numbered, MLA, APA, or Chicago) |
 | Output Schema | A JSON Schema object that defines the structure of the research output |
-| Stream | Whether to stream research results in real-time as Server-Sent Events (SSE) with progress updates and incremental results |
 
 #### Get Research Status
 

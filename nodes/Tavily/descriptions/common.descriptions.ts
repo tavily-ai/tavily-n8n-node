@@ -84,6 +84,18 @@ export const extractOptions: INodeProperties[] = [
 		description:
 			'A natural language query describing the information you want to extract from the provided URLs. Enables Chunks Per Source.',
 	},
+	{
+		displayName: 'Timeout',
+		name: 'timeout',
+		type: 'number',
+		default: 10,
+		description:
+			'Maximum time in seconds to wait for the extraction (1-60). If not set, Tavily waits 10 seconds for basic extraction and 30 seconds for advanced extraction.',
+		typeOptions: {
+			minValue: 1,
+			maxValue: 60,
+		},
+	},
 ];
 
 export const queryOptions: INodeProperties[] = [
@@ -153,12 +165,33 @@ export const queryOptions: INodeProperties[] = [
 		placeholder: 'example.com',
 	},
 	{
+		displayName: 'Filter By Language',
+		name: 'filter_by_language',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to return only results in the selected language. Requires Language.',
+		displayOptions: {
+			show: {
+				language: [{ _cnd: { exists: true } }],
+			},
+		},
+	},
+	{
+		displayName: 'Filter By Published Date',
+		name: 'filter_by_published_date',
+		type: 'boolean',
+		default: false,
+		description:
+			'Whether to filter by best-estimate published or last-updated date (beta). With an active time range or start/end date window, removes undated and out-of-window results. Also turns on Include Published Date.',
+	},
+	{
 		displayName: 'Include Answer',
 		name: 'include_answer',
 		type: 'options',
 		default: 'basic',
 		description: 'Include an LLM-generated answer to the provided query',
 		options: [
+			{ name: 'None', value: false, description: 'Do not generate an answer' },
 			{
 				name: 'Basic',
 				value: 'basic',
@@ -182,6 +215,30 @@ export const queryOptions: INodeProperties[] = [
 		description: 'A list of domains to specifically include in the search results',
 		placeholder: 'example.com',
 	},
+	{
+		displayName: 'Include Domains Mode',
+		name: 'include_domains_mode',
+		type: 'options',
+		default: 'prefer',
+		options: [
+			{
+				name: 'Prefer',
+				value: 'prefer',
+				description: 'Boost results from the included domains but allow others',
+			},
+			{
+				name: 'Restrict',
+				value: 'restrict',
+				description: 'Return only results from the included domains and their subdomains',
+			},
+		],
+		description: 'Whether Include Domains boosts or restricts the results. Requires Include Domains.',
+		displayOptions: {
+			show: {
+				include_domains: [{ _cnd: { exists: true } }],
+			},
+		},
+	},
 	includeFavicon,
 	{
 		displayName: 'Include Image Descriptions',
@@ -203,13 +260,35 @@ export const queryOptions: INodeProperties[] = [
 		description: 'Whether to perform an image search and include the results in the response',
 	},
 	{
-		displayName: 'Include Raw Content',
-		name: 'include_raw_content',
+		displayName: 'Include Published Date',
+		name: 'include_published_date',
 		type: 'boolean',
 		default: false,
-		description: 'Whether to include the cleaned and parsed HTML content of each search result',
+		description:
+			'Whether to include a best-estimate published or last-updated date for each result (beta). It can be later than original publication and is null when undetected. Always on for the news topic.',
+	},
+	{
+		displayName: 'Include Raw Content',
+		name: 'include_raw_content',
+		type: 'options',
+		default: false,
+		options: [
+			{ name: 'None', value: false },
+			{ name: 'Enabled (Default Format)', value: true },
+			{ name: 'Markdown', value: 'markdown' },
+			{ name: 'Text', value: 'text' },
+		],
+		description: 'Include cleaned page content as Markdown or plain text',
 	},
 	includeUsage,
+	{
+		displayName: 'Language',
+		name: 'language',
+		type: 'string',
+		default: '',
+		description: 'Boost results written in this language, for example english',
+		placeholder: 'e.g. english',
+	},
 	{
 		displayName: 'Max Results',
 		name: 'max_results',
@@ -219,6 +298,18 @@ export const queryOptions: INodeProperties[] = [
 		typeOptions: {
 			minValue: 1,
 			maxValue: 20,
+		},
+	},
+	{
+		displayName: 'Safe Search',
+		name: 'safe_search',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to filter out unsafe content. Not available with the Fast and Ultra-Fast search depths.',
+		displayOptions: {
+			hide: {
+				search_depth: ['fast', 'ultra-fast'],
+			},
 		},
 	},
 	{
@@ -329,8 +420,8 @@ export const crawlOptions: INodeProperties[] = [
 		displayName: 'Allow External',
 		name: 'allow_external',
 		type: 'boolean',
-		default: false,
-		description: 'Whether to allow following links that go to external domains',
+		default: true,
+		description: 'Whether to include external domain links in the final results list',
 	},
 	{
 		displayName: 'Chunks Per Source',
@@ -403,7 +494,7 @@ export const crawlOptions: INodeProperties[] = [
 		type: 'number',
 		default: 20,
 		description: 'Max number of links to follow per level',
-		typeOptions: { minValue: 1 },
+		typeOptions: { minValue: 1, maxValue: 500 },
 	},
 	{
 		displayName: 'Max Depth',
@@ -411,7 +502,7 @@ export const crawlOptions: INodeProperties[] = [
 		type: 'number',
 		default: 1,
 		description: 'Max depth of the crawl',
-		typeOptions: { minValue: 1 },
+		typeOptions: { minValue: 1, maxValue: 5 },
 	},
 	{
 		displayName: 'Select Domains',
@@ -428,6 +519,17 @@ export const crawlOptions: INodeProperties[] = [
 		typeOptions: { multipleValues: true },
 		default: [],
 		description: 'Regex patterns to select only URLs with specific path patterns (e.g., "/docs/.*")',
+	},
+	{
+		displayName: 'Timeout',
+		name: 'timeout',
+		type: 'number',
+		default: 150,
+		description: 'Maximum time in seconds to wait for the crawl operation before timing out (10-150)',
+		typeOptions: {
+			minValue: 10,
+			maxValue: 150,
+		},
 	},
 ];
 
@@ -493,14 +595,6 @@ export const researchOptions: INodeProperties[] = [
 		placeholder:
 			'{"properties": {"company": {"type": "string", "description": "Company name"}}, "required": ["company"]}',
 	},
-	{
-		displayName: 'Stream',
-		name: 'stream',
-		type: 'boolean',
-		default: false,
-		description:
-			'Whether to stream the research results as they are generated. When enabled, returns Server-Sent Events (SSE) with real-time progress updates, tool calls, and incremental results.',
-	},
 ];
 
 export const mapOptions: INodeProperties[] = [
@@ -533,7 +627,7 @@ export const mapOptions: INodeProperties[] = [
 		type: 'number',
 		default: 20,
 		description: 'Maximum number of links to follow per level of the tree (i.e., per page)',
-		typeOptions: { minValue: 1 },
+		typeOptions: { minValue: 1, maxValue: 500 },
 	},
 	{
 		displayName: 'Max Depth',
@@ -541,7 +635,7 @@ export const mapOptions: INodeProperties[] = [
 		type: 'number',
 		default: 1,
 		description: 'Defines how far from the base URL the crawler can explore',
-		typeOptions: { minValue: 1 },
+		typeOptions: { minValue: 1, maxValue: 5 },
 	},
 	{
 		displayName: 'Select Domains',
