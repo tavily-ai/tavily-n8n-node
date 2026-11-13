@@ -42,9 +42,14 @@ export async function execute(this: IExecuteFunctions, index: number) {
 	const input = this.getNodeParameter('input', index) as string;
 	const options = this.getNodeParameter('options', index) as IDataObject;
 
+	if (options.stream === true) {
+		throw new NodeOperationError(this.getNode(), 'Streaming is not supported by this JSON task node. Disable Stream and use Create Research Task, then Get Research Status with a Wait node.', { itemIndex: index });
+	}
+
 	const body: IDataObject = {
 		input,
 		...options,
+		stream: false,
 	};
 
 	// Parse output_schema from JSON string to object if provided
@@ -68,4 +73,3 @@ export async function execute(this: IExecuteFunctions, index: number) {
 		{ itemData: { item: index } },
 	);
 }
-

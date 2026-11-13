@@ -38,7 +38,8 @@ export class TavilyApi implements ICredentialType {
 		properties: {
 			headers: {
 				Authorization: '=Bearer {{$credentials.apiKey}}',
-				'X-Client-Source': 'n8n',
+				'X-Client-Name': 'n8n',
+				'X-Client-Source': 'api',
 			},
 		},
 	};

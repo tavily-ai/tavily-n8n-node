@@ -4,6 +4,7 @@ import type {
 	IExecuteFunctions,
 	INodeProperties,
 } from 'n8n-workflow';
+import { NodeOperationError } from 'n8n-workflow';
 import { tavilyApiRequest } from '../../transport';
 import { cleanList, cleanListFields, DOMAIN_SEPARATOR } from '../lists';
 import { queryOptions } from "../../descriptions";
@@ -206,6 +207,8 @@ export async function execute(this: IExecuteFunctions, index: number) {
 
 	cleanListFields(body, DOMAIN_LIST_FIELDS, DOMAIN_SEPARATOR);
 
+	validateSearchBody.call(this, body, index);
+
 	const endpoint = "/search";
 
 	const responseData = (await tavilyApiRequest.call(this, 'POST', endpoint, body)) as IDataObject;
@@ -239,4 +242,21 @@ function pickNonEmpty(source: IDataObject, keys: string[]): IDataObject {
 		picked[key] = value;
 	}
 	return picked;
+}
+
+/** Fail with a clear message instead of a 400 when options that depend on each other don't fit. */
+function validateSearchBody(this: IExecuteFunctions, body: IDataObject, itemIndex: number) {
+	const fail = (message: string, description: string) => {
+		throw new NodeOperationError(this.getNode(), message, { itemIndex, description });
+	};
+
+	if (body.include_domains_mode !== undefined && !body.include_domains) {
+		fail('Include Domains Mode needs Include Domains', 'Add at least one domain, or remove Include Domains Mode.');
+	}
+	if (body.filter_by_language === true && !body.language) {
+		fail('Filter By Language needs Language', 'Set Language, or remove Filter By Language.');
+	}
+	if (body.safe_search === true && (body.search_depth === 'fast' || body.search_depth === 'ultra-fast')) {
+		fail('Safe Search is not available with this search depth', 'Use the Basic or Advanced search depth, or turn Safe Search off.');
+	}
 }
